@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CategoryFilter from "@/components/CategoryFilter";
 import BookCard from "@/components/BookCard";
-import { books } from "@/data/books";
+import { useBooks } from "@/hooks/use-books";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +33,7 @@ const Browse = () => {
   const [sortBy, setSortBy] = useState<SortOption>("rating");
   const [currentPage, setCurrentPage] = useState(1);
   const { addToCart } = useCart();
+  const { data: books = [], isLoading } = useBooks();
 
   const filteredBooks = useMemo(() => {
     const filtered = books.filter((book) => {
@@ -60,7 +61,7 @@ const Browse = () => {
           return 0;
       }
     });
-  }, [activeCategory, searchQuery, sortBy]);
+  }, [books, activeCategory, searchQuery, sortBy]);
 
   const totalPages = Math.ceil(filteredBooks.length / BOOKS_PER_PAGE);
   const paginatedBooks = filteredBooks.slice(
@@ -68,7 +69,6 @@ const Browse = () => {
     currentPage * BOOKS_PER_PAGE
   );
 
-  // Reset to page 1 when filters change
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);
     setCurrentPage(1);
@@ -100,7 +100,11 @@ const Browse = () => {
           />
         </div>
 
-        {filteredBooks.length === 0 ? (
+        {isLoading ? (
+          <div className="text-center py-20">
+            <p className="font-body text-muted-foreground">Loading books...</p>
+          </div>
+        ) : filteredBooks.length === 0 ? (
           <div className="text-center py-20">
             <p className="font-display text-2xl text-muted-foreground">No books found</p>
             <p className="font-body text-muted-foreground mt-2">

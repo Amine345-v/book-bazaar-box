@@ -2,13 +2,14 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { books } from "@/data/books";
+import { useBooks } from "@/hooks/use-books";
 
 const SearchAutocomplete = () => {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const { data: books = [] } = useBooks();
 
   const suggestions = query.length >= 2
     ? books

@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BookSection from "@/components/BookSection";
 import ReviewsSection from "@/components/ReviewsSection";
-import { books } from "@/data/books";
+import { useBook } from "@/hooks/use-books";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 
@@ -15,8 +15,19 @@ const BookDetail = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { book, books = [], isLoading } = useBook(id);
 
-  const book = books.find((b) => b.id === id);
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="container mx-auto px-4 py-20 text-center">
+          <p className="font-body text-muted-foreground">Loading...</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!book) {
     return (
@@ -115,7 +126,6 @@ const BookDetail = () => {
           </div>
         </div>
 
-        {/* Reviews Section */}
         <ReviewsSection bookId={book.id} />
 
         {relatedBooks.length > 0 && (
