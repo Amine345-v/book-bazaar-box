@@ -60,7 +60,7 @@ const Footer = () => {
 
         <div className="border-t mt-10 pt-6 text-center">
           <p className="font-body text-sm text-muted-foreground">
-            © 2026 PageTurn. All rights reserved.
+            © 2026 Book Bazaar. All rights reserved.
           </p>
         </div>
       </div>
