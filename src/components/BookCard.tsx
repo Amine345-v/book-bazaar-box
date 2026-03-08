@@ -1,6 +1,7 @@
-import { Star, ShoppingCart } from "lucide-react";
+import { Star, ShoppingCart, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useWishlist } from "@/contexts/WishlistContext";
 import type { Book } from "@/data/books";
 
 interface BookCardProps {
@@ -10,6 +11,8 @@ interface BookCardProps {
 
 const BookCard = ({ book, onAddToCart }: BookCardProps) => {
   const navigate = useNavigate();
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  const wishlisted = isInWishlist(book.id);
 
   return (
     <div
@@ -33,6 +36,19 @@ const BookCard = ({ book, onAddToCart }: BookCardProps) => {
             NEW
           </span>
         )}
+        <button
+          className={`absolute bottom-2 right-2 h-8 w-8 rounded-full flex items-center justify-center transition-all ${
+            wishlisted
+              ? "bg-primary text-primary-foreground"
+              : "bg-card/80 backdrop-blur-sm text-muted-foreground hover:text-primary"
+          }`}
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleWishlist(book.id);
+          }}
+        >
+          <Heart className={`h-4 w-4 ${wishlisted ? "fill-current" : ""}`} />
+        </button>
       </div>
 
       <div className="space-y-1.5">
