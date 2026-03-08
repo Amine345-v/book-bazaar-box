@@ -1,9 +1,17 @@
-import { ShoppingCart, Search, BookOpen, Menu } from "lucide-react";
+import { ShoppingCart, Search, BookOpen, Menu, User, LogOut, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 
 interface NavbarProps {
@@ -20,6 +28,7 @@ const navLinks = [
 
 const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
   const { totalItems } = useCart();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
   return (
@@ -58,7 +67,17 @@ const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
           </div>
         )}
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          {user && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/wishlist")}
+            >
+              <Heart className="h-5 w-5" />
+            </Button>
+          )}
+
           <Button
             variant="ghost"
             size="icon"
@@ -72,6 +91,50 @@ const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
               </Badge>
             )}
           </Button>
+
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center font-display font-bold text-primary text-sm">
+                    {(user.user_metadata?.display_name || user.email || "U").charAt(0).toUpperCase()}
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48 bg-card">
+                <div className="px-2 py-1.5">
+                  <p className="font-body text-sm font-medium text-card-foreground truncate">
+                    {user.user_metadata?.display_name || user.email}
+                  </p>
+                  <p className="font-body text-xs text-muted-foreground truncate">
+                    {user.email}
+                  </p>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("/wishlist")} className="font-body cursor-pointer">
+                  <Heart className="h-4 w-4 mr-2" /> My Wishlist
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/purchases")} className="font-body cursor-pointer">
+                  <ShoppingCart className="h-4 w-4 mr-2" /> My Purchases
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => signOut()}
+                  className="font-body cursor-pointer text-destructive"
+                >
+                  <LogOut className="h-4 w-4 mr-2" /> Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button
+              variant="outline"
+              className="font-body font-medium"
+              onClick={() => navigate("/auth")}
+            >
+              <User className="h-4 w-4 mr-2" /> Sign In
+            </Button>
+          )}
 
           <Sheet>
             <SheetTrigger asChild className="lg:hidden">
