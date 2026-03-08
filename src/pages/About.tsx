@@ -54,7 +54,7 @@ const About = () => {
               Today, we serve over 250,000 readers across 120 countries. Our team of editors handpicks every title in our Featured collection, ensuring you always find something worth reading. We work directly with publishers and independent authors to bring you the best prices possible.
             </p>
             <p>
-              Every ebook on PageTurn is DRM-free, meaning you truly own what you buy. Read on any device, any app, any time. That's our promise.
+              Every ebook on Book Bazaar is DRM-free, meaning you truly own what you buy. Read on any device, any app, any time. That's our promise.
             </p>
           </div>
         </section>
