@@ -38,7 +38,7 @@ const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
     <nav className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-md">
       <div className="container mx-auto flex items-center justify-between px-4 py-4">
         <Link to="/" className="flex items-center gap-2">
-          <img src={logo} alt="Book Bazaar" className="h-9 w-9 object-contain" />
+          <img src={logo} alt="Book Bazaar" className="h-12 w-12 object-contain" />
           <span className="font-display text-2xl font-bold text-foreground">
             Book Bazaar
           </span>

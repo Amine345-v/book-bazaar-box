@@ -80,7 +80,7 @@ const Auth = () => {
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <Link to="/" className="flex items-center justify-center gap-2 mb-8">
-          <img src={logo} alt="Book Bazaar" className="h-10 w-10 object-contain" />
+          <img src={logo} alt="Book Bazaar" className="h-14 w-14 object-contain" />
           <span className="font-display text-3xl font-bold text-foreground">Book Bazaar</span>
         </Link>
 
