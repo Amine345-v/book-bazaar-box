@@ -1,5 +1,6 @@
 import { ShoppingCart, BookOpen, Menu, User, LogOut, Heart, UserCircle } from "lucide-react";
 import SearchAutocomplete from "@/components/SearchAutocomplete";
+import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 
 import { Badge } from "@/components/ui/badge";
@@ -59,6 +60,7 @@ const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
         </div>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           {user && (
             <Button
               variant="ghost"
