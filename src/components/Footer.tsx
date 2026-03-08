@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import logo from "@/assets/logo.png";
 
 const Footer = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className="border-t bg-card">
       <div className="container mx-auto px-4 py-12">
@@ -14,20 +17,20 @@ const Footer = () => {
               </span>
             </Link>
             <p className="font-body text-sm text-muted-foreground leading-relaxed">
-              Your destination for curated ebooks. Discover your next favorite read from our extensive collection.
+              {t("footer.description")}
             </p>
           </div>
 
           <div>
-            <h4 className="font-display font-semibold text-foreground mb-3">Shop</h4>
+            <h4 className="font-display font-semibold text-foreground mb-3">{t("footer.shop")}</h4>
             <ul className="space-y-2">
               {[
-                { label: "Browse All", to: "/browse" },
-                { label: "New Arrivals", to: "/browse?filter=new" },
-                { label: "Bestsellers", to: "/browse?filter=bestseller" },
-                { label: "On Sale", to: "/browse?filter=sale" },
+                { label: t("footer.browseAll"), to: "/browse" },
+                { label: t("footer.newArrivals"), to: "/browse?filter=new" },
+                { label: t("footer.bestsellers"), to: "/browse?filter=bestseller" },
+                { label: t("footer.onSale"), to: "/browse?filter=sale" },
               ].map((item) => (
-                <li key={item.label}>
+                <li key={item.to}>
                   <Link to={item.to} className="font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
                     {item.label}
                   </Link>
@@ -37,7 +40,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="font-display font-semibold text-foreground mb-3">Categories</h4>
+            <h4 className="font-display font-semibold text-foreground mb-3">{t("footer.categories")}</h4>
             <ul className="space-y-2">
               {["Mystery", "Romance", "Sci-Fi", "Fantasy", "Self-Help"].map((item) => (
                 <li key={item}>
@@ -50,15 +53,15 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="font-display font-semibold text-foreground mb-3">Company</h4>
+            <h4 className="font-display font-semibold text-foreground mb-3">{t("footer.company")}</h4>
             <ul className="space-y-2">
               {[
-                { label: "About Us", to: "/about" },
-                { label: "Contact", to: "/contact" },
-                { label: "Privacy Policy", to: "/privacy" },
-                { label: "Terms of Service", to: "/terms" },
+                { label: t("footer.aboutUs"), to: "/about" },
+                { label: t("footer.contact"), to: "/contact" },
+                { label: t("footer.privacyPolicy"), to: "/privacy" },
+                { label: t("footer.termsOfService"), to: "/terms" },
               ].map((item) => (
-                <li key={item.label}>
+                <li key={item.to}>
                   <Link to={item.to} className="font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
                     {item.label}
                   </Link>
@@ -70,7 +73,7 @@ const Footer = () => {
 
         <div className="border-t mt-10 pt-6 text-center">
           <p className="font-body text-sm text-muted-foreground">
-            © 2026 Book Bazaar. All rights reserved.
+            {t("footer.copyright")}
           </p>
         </div>
       </div>
