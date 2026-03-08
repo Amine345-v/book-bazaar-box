@@ -16,6 +16,7 @@ import Auth from "./pages/Auth";
 import Wishlist from "./pages/Wishlist";
 import Purchases from "./pages/Purchases";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
