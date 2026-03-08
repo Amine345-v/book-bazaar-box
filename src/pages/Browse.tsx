@@ -24,7 +24,7 @@ const Browse = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      <Navbar />
 
       <main className="container mx-auto px-4 py-10">
         <div className="mb-8">
