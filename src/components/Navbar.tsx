@@ -1,4 +1,5 @@
-import { ShoppingCart, BookOpen, Menu, User, LogOut, Heart, UserCircle } from "lucide-react";
+import { ShoppingCart, Menu, User, LogOut, Heart, UserCircle } from "lucide-react";
+import logo from "@/assets/logo.png";
 import SearchAutocomplete from "@/components/SearchAutocomplete";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
