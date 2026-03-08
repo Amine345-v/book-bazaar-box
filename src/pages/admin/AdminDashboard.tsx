@@ -53,7 +53,7 @@ const AdminDashboard = () => {
       <h1 className="font-display text-3xl font-bold text-foreground mb-6">Dashboard</h1>
 
       {/* Stats grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-8">
         {stats.map((stat) => (
           <div key={stat.label} className="bg-card rounded-xl p-5 shadow-book border border-border">
             <div className="flex items-center gap-3 mb-2">
