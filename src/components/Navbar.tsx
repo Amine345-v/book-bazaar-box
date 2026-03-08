@@ -29,6 +29,7 @@ const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { data: isAdmin } = useIsAdmin();
 
   const navLinks = [
     { label: t("nav.home"), href: "/" },
