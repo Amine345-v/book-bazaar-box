@@ -1,1 +1,4 @@
 project_id = "zbujtaxiyxnzfgjushjy"
+
+[functions.translate-books]
+verify_jwt = false
