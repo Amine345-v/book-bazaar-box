@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Book } from "@/types/book";
+import { useTranslation } from "react-i18next";
+import { useMemo } from "react";
+import type { Book, I18nField } from "@/types/book";
 
 // Static cover image imports
 import bookCover1 from "@/assets/book-cover-1.jpg";
