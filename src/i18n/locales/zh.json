@@ -1,0 +1,186 @@
+{
+  "nav": {
+    "home": "首页",
+    "browse": "浏览",
+    "categories": "分类",
+    "about": "关于",
+    "signIn": "登录",
+    "myProfile": "我的资料",
+    "myWishlist": "我的收藏",
+    "myPurchases": "我的购买",
+    "signOut": "退出登录"
+  },
+  "hero": {
+    "badge": "超过10,000本图书可供选择",
+    "title": "发现页面之间的世界",
+    "subtitle": "探索数千本电子书——从畅销惊悚小说到经典名著。每周都有新书上架。",
+    "browseCollection": "浏览书库",
+    "viewCategories": "查看分类"
+  },
+  "features": {
+    "instantAccess": "即时访问",
+    "instantAccessDesc": "购买后立即下载并开始阅读",
+    "drmFree": "无DRM限制",
+    "drmFreeDesc": "在任何设备上阅读，无任何限制",
+    "freeDelivery": "免费送达",
+    "freeDeliveryDesc": "所有电子书免费送达您的书库",
+    "support": "全天候支持",
+    "supportDesc": "我们的读者支持团队随时为您服务"
+  },
+  "sections": {
+    "featuredPicks": "精选推荐",
+    "featuredPicksSub": "编辑精心挑选",
+    "bestsellers": "畅销书籍",
+    "bestsellersSub": "读者最爱",
+    "newArrivals": "新书上架",
+    "newArrivalsSub": "最新出版",
+    "viewAll": "查看全部",
+    "loadingBooks": "正在加载图书..."
+  },
+  "testimonials": {
+    "title": "读者评价",
+    "subtitle": "加入全球数千名快乐读者的行列"
+  },
+  "newsletter": {
+    "title": "保持联系",
+    "subtitle": "获取每周推荐、独家优惠和新书提醒。",
+    "placeholder": "输入您的邮箱",
+    "subscribe": "订阅",
+    "success": "感谢您的订阅！",
+    "successDesc": "您将在收件箱中收到我们的每周精选。"
+  },
+  "footer": {
+    "description": "您的精选电子书目的地。在我们丰富的藏书中发现您的下一本最爱。",
+    "shop": "商店",
+    "browseAll": "浏览全部",
+    "newArrivals": "新书上架",
+    "bestsellers": "畅销书籍",
+    "onSale": "特价优惠",
+    "categories": "分类",
+    "company": "公司",
+    "aboutUs": "关于我们",
+    "contact": "联系我们",
+    "privacyPolicy": "隐私政策",
+    "termsOfService": "服务条款",
+    "copyright": "© 2026 Book Bazaar. 保留所有权利。"
+  },
+  "cart": {
+    "title": "购物车",
+    "empty": "购物车为空",
+    "emptyDesc": "看起来您还没有添加任何书籍",
+    "startShopping": "开始购物",
+    "continueShopping": "继续购物",
+    "clearCart": "清空购物车",
+    "cartCleared": "购物车已清空",
+    "orderSummary": "订单摘要",
+    "total": "总计",
+    "checkout": "去结算",
+    "processing": "处理中...",
+    "secureCheckout": "Stripe安全支付 · 即时送达",
+    "signInRequired": "请登录后结算"
+  },
+  "browse": {
+    "title": "浏览电子书",
+    "subtitle": "探索我们完整的{{count}}本图书收藏",
+    "noBooks": "未找到图书",
+    "noBooksHint": "尝试其他搜索词或分类",
+    "showing": "显示第{{from}}–{{to}}本，共{{total}}本",
+    "highestRated": "评分最高",
+    "priceLowHigh": "价格：低到高",
+    "priceHighLow": "价格：高到低",
+    "newestFirst": "最新优先",
+    "oldestFirst": "最早优先"
+  },
+  "bookCard": {
+    "off": "% 折扣",
+    "new": "新品"
+  },
+  "auth": {
+    "welcomeBack": "欢迎回来",
+    "createAccount": "创建账户",
+    "continueWithGoogle": "使用Google继续",
+    "continueWithApple": "使用Apple继续",
+    "orContinueEmail": "或使用邮箱继续",
+    "displayName": "显示名称",
+    "email": "邮箱",
+    "password": "密码",
+    "signInBtn": "登录",
+    "createAccountBtn": "创建账户",
+    "loading": "加载中...",
+    "noAccount": "没有账户？注册",
+    "hasAccount": "已有账户？登录",
+    "namePlaceholder": "您的名字",
+    "passwordRules": {
+      "length": "至少8个字符",
+      "uppercase": "一个大写字母",
+      "number": "一个数字",
+      "special": "一个特殊字符"
+    },
+    "weakPassword": "请使用更强的密码",
+    "enterName": "请输入您的名字",
+    "welcomeBackToast": "欢迎回来！",
+    "accountCreated": "账户已创建！请查看邮箱确认。"
+  },
+  "about": {
+    "title": "关于 Book Bazaar",
+    "intro": "我们相信每个人都应该有机会阅读伟大的故事。Book Bazaar源于对阅读的热爱。",
+    "titlesAvailable": "可用图书",
+    "happyReaders": "快乐读者",
+    "countries": "国家",
+    "fiveStarReviews": "五星评价",
+    "ourStory": "我们的故事",
+    "story1": "Book Bazaar成立于2023年，最初是一群书虫的小型热情项目。",
+    "story2": "如今，我们为120个国家的超过250,000名读者提供服务。",
+    "story3": "Book Bazaar上的每本电子书都没有DRM限制，这意味着您真正拥有您购买的内容。",
+    "whatWeStandFor": "我们的理念",
+    "qualityCuration": "品质精选",
+    "qualityCurationDesc": "每本推荐书籍都经过我们编辑团队的亲自审阅。",
+    "fairPricing": "公平定价",
+    "fairPricingDesc": "我们保持低利润率，让优秀文学作品人人可及。",
+    "readerFreedom": "读者自由",
+    "readerFreedomDesc": "无DRM文件，永远属于您。没有附加条件。"
+  },
+  "contact": {
+    "title": "联系我们",
+    "subtitle": "有问题或反馈？我们很乐意听取您的意见。",
+    "email": "邮箱",
+    "emailDetail": "support@bookbazaar.com",
+    "location": "地点",
+    "locationDetail": "旧金山，加利福尼亚",
+    "hours": "工作时间",
+    "hoursDetail": "周一至周五，上午9点 – 下午6点（太平洋时间）",
+    "sendMessage": "给我们发消息",
+    "responseTime": "我们通常在24小时内回复。",
+    "yourName": "您的名字",
+    "yourEmail": "您的邮箱",
+    "yourMessage": "您的留言",
+    "send": "发送消息"
+  },
+  "privacy": {
+    "title": "隐私政策",
+    "lastUpdated": "最后更新：2026年3月1日",
+    "sections": {
+      "collect": { "title": "我们收集的信息", "body": "我们收集您直接提供的信息，如姓名、邮箱和支付详情。" },
+      "use": { "title": "信息使用方式", "body": "我们使用您的信息来处理交易、个性化体验和改善服务。" },
+      "sharing": { "title": "数据共享", "body": "我们不出售您的个人信息。仅与支付处理商共享数据。" },
+      "security": { "title": "数据安全", "body": "我们实施行业标准安全措施，包括加密和定期审计。" },
+      "rights": { "title": "您的权利", "body": "您可以随时访问、更新或删除您的个人数据。" },
+      "cookies": { "title": "Cookie", "body": "我们使用基本Cookie进行身份验证。不使用第三方广告Cookie。" },
+      "changes": { "title": "政策变更", "body": "我们可能会不时更新此政策。重大变更将通过邮件通知。" }
+    }
+  },
+  "terms": {
+    "title": "服务条款",
+    "lastUpdated": "最后更新：2026年3月1日",
+    "sections": {
+      "acceptance": { "title": "接受条款", "body": "使用Book Bazaar即表示您同意受这些服务条款的约束。" },
+      "registration": { "title": "账户注册", "body": "创建账户时必须提供准确信息。" },
+      "payments": { "title": "购买与付款", "body": "所有价格以美元计价。付款通过Stripe安全处理。" },
+      "license": { "title": "数字内容许可", "body": "购买的电子书是许可使用，非出售。可在任何个人设备上阅读。" },
+      "refund": { "title": "退款政策", "body": "由于产品的数字性质，所有销售均为最终销售。" },
+      "conduct": { "title": "用户行为", "body": "您同意不滥用我们的服务。" },
+      "liability": { "title": "责任限制", "body": "Book Bazaar按'原样'提供，不提供任何形式的保证。" },
+      "changes": { "title": "条款变更", "body": "我们保留随时修改这些条款的权利。" }
+    }
+  }
+}
