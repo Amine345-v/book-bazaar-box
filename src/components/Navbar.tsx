@@ -1,4 +1,5 @@
-import { ShoppingCart, Search, BookOpen, Menu, User, LogOut, Heart } from "lucide-react";
+import { ShoppingCart, BookOpen, Menu, User, LogOut, Heart, UserCircle } from "lucide-react";
+import SearchAutocomplete from "@/components/SearchAutocomplete";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";

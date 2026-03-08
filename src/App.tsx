@@ -41,6 +41,7 @@ const App = () => (
                 <Route path="/wishlist" element={<Wishlist />} />
                 <Route path="/purchases" element={<Purchases />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
