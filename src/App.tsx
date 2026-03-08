@@ -16,6 +16,7 @@ import Auth from "./pages/Auth";
 import Wishlist from "./pages/Wishlist";
 import Purchases from "./pages/Purchases";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
                 <Route path="/wishlist" element={<Wishlist />} />
                 <Route path="/purchases" element={<Purchases />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

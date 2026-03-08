@@ -1,6 +1,7 @@
-import { ShoppingCart, Search, BookOpen, Menu, User, LogOut, Heart } from "lucide-react";
+import { ShoppingCart, BookOpen, Menu, User, LogOut, Heart, UserCircle } from "lucide-react";
+import SearchAutocomplete from "@/components/SearchAutocomplete";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
@@ -53,19 +54,9 @@ const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
           ))}
         </div>
 
-        {onSearchChange && (
-          <div className="hidden md:flex items-center gap-2 flex-1 max-w-sm mx-8">
-            <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search books, authors..."
-                className="pl-10 bg-secondary/50 border-border font-body"
-                value={searchQuery}
-                onChange={(e) => onSearchChange(e.target.value)}
-              />
-            </div>
-          </div>
-        )}
+        <div className="hidden md:flex flex-1 max-w-sm mx-8">
+          <SearchAutocomplete />
+        </div>
 
         <div className="flex items-center gap-2">
           {user && (
@@ -111,6 +102,9 @@ const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
                   </p>
                 </div>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("/profile")} className="font-body cursor-pointer">
+                  <UserCircle className="h-4 w-4 mr-2" /> My Profile
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate("/wishlist")} className="font-body cursor-pointer">
                   <Heart className="h-4 w-4 mr-2" /> My Wishlist
                 </DropdownMenuItem>
