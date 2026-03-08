@@ -1,0 +1,186 @@
+{
+  "nav": {
+    "home": "Home",
+    "browse": "Browse",
+    "categories": "Categories",
+    "about": "About",
+    "signIn": "Sign In",
+    "myProfile": "My Profile",
+    "myWishlist": "My Wishlist",
+    "myPurchases": "My Purchases",
+    "signOut": "Sign Out"
+  },
+  "hero": {
+    "badge": "Over 10,000 titles available",
+    "title": "Discover Worlds Between the Pages",
+    "subtitle": "Explore thousands of ebooks — from bestselling thrillers to timeless classics. New arrivals every week.",
+    "browseCollection": "Browse Collection",
+    "viewCategories": "View Categories"
+  },
+  "features": {
+    "instantAccess": "Instant Access",
+    "instantAccessDesc": "Download and start reading immediately after purchase",
+    "drmFree": "DRM-Free",
+    "drmFreeDesc": "Read your books on any device, no restrictions",
+    "freeDelivery": "Free Delivery",
+    "freeDeliveryDesc": "All ebooks delivered to your library at no extra cost",
+    "support": "24/7 Support",
+    "supportDesc": "Our readers support team is always here to help"
+  },
+  "sections": {
+    "featuredPicks": "Featured Picks",
+    "featuredPicksSub": "Handpicked by our editors",
+    "bestsellers": "Bestsellers",
+    "bestsellersSub": "Most loved by our readers",
+    "newArrivals": "New Arrivals",
+    "newArrivalsSub": "Fresh off the press",
+    "viewAll": "View All",
+    "loadingBooks": "Loading books..."
+  },
+  "testimonials": {
+    "title": "What Readers Say",
+    "subtitle": "Join thousands of happy readers worldwide"
+  },
+  "newsletter": {
+    "title": "Stay in the Loop",
+    "subtitle": "Get weekly recommendations, exclusive deals, and new release alerts straight to your inbox.",
+    "placeholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "success": "Thanks for subscribing!",
+    "successDesc": "You'll receive our weekly picks in your inbox."
+  },
+  "footer": {
+    "description": "Your destination for curated ebooks. Discover your next favorite read from our extensive collection.",
+    "shop": "Shop",
+    "browseAll": "Browse All",
+    "newArrivals": "New Arrivals",
+    "bestsellers": "Bestsellers",
+    "onSale": "On Sale",
+    "categories": "Categories",
+    "company": "Company",
+    "aboutUs": "About Us",
+    "contact": "Contact",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "copyright": "© 2026 Book Bazaar. All rights reserved."
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your Cart is Empty",
+    "emptyDesc": "Looks like you haven't added any books yet",
+    "startShopping": "Start Shopping",
+    "continueShopping": "Continue Shopping",
+    "clearCart": "Clear Cart",
+    "cartCleared": "Cart cleared",
+    "orderSummary": "Order Summary",
+    "total": "Total",
+    "checkout": "Proceed to Checkout",
+    "processing": "Processing...",
+    "secureCheckout": "Secure checkout powered by Stripe · Instant delivery",
+    "signInRequired": "Please sign in to checkout"
+  },
+  "browse": {
+    "title": "Browse Ebooks",
+    "subtitle": "Explore our complete collection of {{count}} titles",
+    "noBooks": "No books found",
+    "noBooksHint": "Try a different search or category",
+    "showing": "Showing {{from}}–{{to}} of {{total}} book(s)",
+    "highestRated": "Highest Rated",
+    "priceLowHigh": "Price: Low → High",
+    "priceHighLow": "Price: High → Low",
+    "newestFirst": "Newest First",
+    "oldestFirst": "Oldest First"
+  },
+  "bookCard": {
+    "off": "% OFF",
+    "new": "NEW"
+  },
+  "auth": {
+    "welcomeBack": "Welcome Back",
+    "createAccount": "Create Account",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithApple": "Continue with Apple",
+    "orContinueEmail": "or continue with email",
+    "displayName": "Display Name",
+    "email": "Email",
+    "password": "Password",
+    "signInBtn": "Sign In",
+    "createAccountBtn": "Create Account",
+    "loading": "Loading...",
+    "noAccount": "Don't have an account? Sign up",
+    "hasAccount": "Already have an account? Sign in",
+    "namePlaceholder": "Your name",
+    "passwordRules": {
+      "length": "At least 8 characters",
+      "uppercase": "One uppercase letter",
+      "number": "One number",
+      "special": "One special character"
+    },
+    "weakPassword": "Please use a stronger password",
+    "enterName": "Please enter your name",
+    "welcomeBackToast": "Welcome back!",
+    "accountCreated": "Account created! Check your email to confirm."
+  },
+  "about": {
+    "title": "About Book Bazaar",
+    "intro": "We believe everyone deserves access to great stories. Book Bazaar was born from a love of reading and a desire to make ebooks more affordable, accessible, and beautiful. Our curated collection spans every genre, from pulse-pounding thrillers to soul-stirring poetry.",
+    "titlesAvailable": "Titles Available",
+    "happyReaders": "Happy Readers",
+    "countries": "Countries",
+    "fiveStarReviews": "5-Star Reviews",
+    "ourStory": "Our Story",
+    "story1": "Founded in 2023, Book Bazaar started as a small passion project by a group of bookworms who wanted to create a better ebook experience. We were frustrated by cluttered interfaces, DRM restrictions, and the lack of curation in existing platforms.",
+    "story2": "Today, we serve over 250,000 readers across 120 countries. Our team of editors handpicks every title in our Featured collection, ensuring you always find something worth reading. We work directly with publishers and independent authors to bring you the best prices possible.",
+    "story3": "Every ebook on Book Bazaar is DRM-free, meaning you truly own what you buy. Read on any device, any app, any time. That's our promise.",
+    "whatWeStandFor": "What We Stand For",
+    "qualityCuration": "Quality Curation",
+    "qualityCurationDesc": "Every featured book is personally reviewed by our editorial team.",
+    "fairPricing": "Fair Pricing",
+    "fairPricingDesc": "We keep margins thin so great literature stays accessible to everyone.",
+    "readerFreedom": "Reader Freedom",
+    "readerFreedomDesc": "DRM-free files that you own forever. No strings attached."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Have a question or feedback? We'd love to hear from you.",
+    "email": "Email",
+    "emailDetail": "support@bookbazaar.com",
+    "location": "Location",
+    "locationDetail": "San Francisco, CA",
+    "hours": "Hours",
+    "hoursDetail": "Mon–Fri, 9 AM – 6 PM PT",
+    "sendMessage": "Send us a message",
+    "responseTime": "We typically respond within 24 hours.",
+    "yourName": "Your name",
+    "yourEmail": "Your email",
+    "yourMessage": "Your message",
+    "send": "Send Message"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: March 1, 2026",
+    "sections": {
+      "collect": { "title": "Information We Collect", "body": "We collect information you provide directly, such as your name, email address, and payment details when you create an account or make a purchase. We also collect usage data automatically, including pages viewed, search queries, and device information." },
+      "use": { "title": "How We Use Your Information", "body": "We use your information to process transactions, personalize your experience, send order confirmations and updates, improve our services, and communicate with you about promotions (only if you opt in)." },
+      "sharing": { "title": "Data Sharing", "body": "We do not sell your personal information. We share data only with payment processors (Stripe) to complete transactions and with service providers who help us operate the platform, all under strict confidentiality agreements." },
+      "security": { "title": "Data Security", "body": "We implement industry-standard security measures including encryption, secure servers, and regular security audits to protect your personal information." },
+      "rights": { "title": "Your Rights", "body": "You may access, update, or delete your personal data at any time through your profile settings. You can also request a full export of your data by contacting our support team." },
+      "cookies": { "title": "Cookies", "body": "We use essential cookies for authentication and preferences. We do not use third-party advertising cookies. You can manage cookie settings in your browser." },
+      "changes": { "title": "Changes to This Policy", "body": "We may update this policy from time to time. We will notify you of significant changes via email or a notice on our website." }
+    }
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last updated: March 1, 2026",
+    "sections": {
+      "acceptance": { "title": "Acceptance of Terms", "body": "By accessing or using Book Bazaar, you agree to be bound by these Terms of Service. If you do not agree, please do not use our services." },
+      "registration": { "title": "Account Registration", "body": "You must provide accurate information when creating an account. You are responsible for maintaining the security of your account credentials and for all activity under your account." },
+      "payments": { "title": "Purchases and Payments", "body": "All prices are listed in USD. Payments are processed securely through Stripe. Once a purchase is completed, you receive a perpetual, non-transferable license to access the purchased ebook." },
+      "license": { "title": "Digital Content License", "body": "Ebooks purchased on Book Bazaar are licensed, not sold. You may download and read purchased content on any personal device. You may not redistribute, resell, or share purchased content." },
+      "refund": { "title": "Refund Policy", "body": "Due to the digital nature of our products, all sales are final. If you experience a technical issue preventing access to your purchase, please contact support for assistance." },
+      "conduct": { "title": "User Conduct", "body": "You agree not to misuse our services, attempt to gain unauthorized access to our systems, or engage in any activity that disrupts the platform's operation." },
+      "liability": { "title": "Limitation of Liability", "body": "Book Bazaar is provided 'as is' without warranties of any kind. We are not liable for any indirect, incidental, or consequential damages arising from your use of the service." },
+      "changes": { "title": "Changes to Terms", "body": "We reserve the right to modify these terms at any time. Continued use of the service after changes constitutes acceptance of the revised terms." }
+    }
+  }
+}

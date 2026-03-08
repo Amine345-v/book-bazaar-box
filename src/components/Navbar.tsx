@@ -2,8 +2,8 @@ import { ShoppingCart, Menu, User, LogOut, Heart, UserCircle } from "lucide-reac
 import logo from "@/assets/logo.png";
 import SearchAutocomplete from "@/components/SearchAutocomplete";
 import ThemeToggle from "@/components/ThemeToggle";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
-
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
@@ -16,23 +16,25 @@ import {
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface NavbarProps {
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
 }
 
-const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Browse", href: "/browse" },
-  { label: "Categories", href: "/categories" },
-  { label: "About", href: "/about" },
-];
-
 const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
   const { totalItems } = useCart();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const navLinks = [
+    { label: t("nav.home"), href: "/" },
+    { label: t("nav.browse"), href: "/browse" },
+    { label: t("nav.categories"), href: "/categories" },
+    { label: t("nav.about"), href: "/about" },
+  ];
 
   return (
     <nav className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-md">
@@ -61,6 +63,7 @@ const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
         </div>
 
         <div className="flex items-center gap-2">
+          <LanguageSwitcher />
           <ThemeToggle />
           {user && (
             <Button
@@ -106,20 +109,20 @@ const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => navigate("/profile")} className="font-body cursor-pointer">
-                  <UserCircle className="h-4 w-4 mr-2" /> My Profile
+                  <UserCircle className="h-4 w-4 mr-2" /> {t("nav.myProfile")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate("/wishlist")} className="font-body cursor-pointer">
-                  <Heart className="h-4 w-4 mr-2" /> My Wishlist
+                  <Heart className="h-4 w-4 mr-2" /> {t("nav.myWishlist")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate("/purchases")} className="font-body cursor-pointer">
-                  <ShoppingCart className="h-4 w-4 mr-2" /> My Purchases
+                  <ShoppingCart className="h-4 w-4 mr-2" /> {t("nav.myPurchases")}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => signOut()}
                   className="font-body cursor-pointer text-destructive"
                 >
-                  <LogOut className="h-4 w-4 mr-2" /> Sign Out
+                  <LogOut className="h-4 w-4 mr-2" /> {t("nav.signOut")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -129,7 +132,7 @@ const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
               className="font-body font-medium"
               onClick={() => navigate("/auth")}
             >
-              <User className="h-4 w-4 mr-2" /> Sign In
+              <User className="h-4 w-4 mr-2" /> {t("nav.signIn")}
             </Button>
           )}
 

@@ -3,15 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail } from "lucide-react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const NewsletterSection = () => {
   const [email, setEmail] = useState("");
+  const { t } = useTranslation();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
-      toast.success("Thanks for subscribing!", {
-        description: "You'll receive our weekly picks in your inbox.",
+      toast.success(t("newsletter.success"), {
+        description: t("newsletter.successDesc"),
       });
       setEmail("");
     }
@@ -23,22 +25,22 @@ const NewsletterSection = () => {
         <div className="max-w-2xl mx-auto text-center bg-card rounded-2xl p-10 shadow-book border border-border">
           <Mail className="h-10 w-10 text-primary mx-auto mb-4" />
           <h2 className="font-display text-3xl font-bold text-foreground mb-2">
-            Stay in the Loop
+            {t("newsletter.title")}
           </h2>
           <p className="font-body text-muted-foreground mb-6">
-            Get weekly recommendations, exclusive deals, and new release alerts straight to your inbox.
+            {t("newsletter.subtitle")}
           </p>
           <form onSubmit={handleSubmit} className="flex gap-3 max-w-md mx-auto">
             <Input
               type="email"
-              placeholder="Enter your email"
+              placeholder={t("newsletter.placeholder")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="font-body bg-secondary/50"
               required
             />
             <Button type="submit" className="font-body font-semibold shrink-0">
-              Subscribe
+              {t("newsletter.subscribe")}
             </Button>
           </form>
         </div>

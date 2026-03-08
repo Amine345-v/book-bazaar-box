@@ -4,6 +4,7 @@ import type { Book } from "@/types/book";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface BookSectionProps {
   title: string;
@@ -15,6 +16,7 @@ interface BookSectionProps {
 const BookSection = ({ title, subtitle, books, showViewAll }: BookSectionProps) => {
   const { addToCart } = useCart();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <section className="py-10">
@@ -31,7 +33,7 @@ const BookSection = ({ title, subtitle, books, showViewAll }: BookSectionProps) 
             className="font-body text-primary gap-1"
             onClick={() => navigate("/browse")}
           >
-            View All <ArrowRight className="h-4 w-4" />
+            {t("sections.viewAll")} <ArrowRight className="h-4 w-4" />
           </Button>
         )}
       </div>
