@@ -1,18 +1,20 @@
 import { Star, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import type { Book } from "@/data/books";
 
 interface BookCardProps {
   book: Book;
   onAddToCart: (book: Book) => void;
-  onSelect: (book: Book) => void;
 }
 
-const BookCard = ({ book, onAddToCart, onSelect }: BookCardProps) => {
+const BookCard = ({ book, onAddToCart }: BookCardProps) => {
+  const navigate = useNavigate();
+
   return (
     <div
       className="group cursor-pointer rounded-lg bg-card p-3 transition-all duration-300 hover:-translate-y-1 shadow-book hover:shadow-book-hover"
-      onClick={() => onSelect(book)}
+      onClick={() => navigate(`/book/${book.id}`)}
     >
       <div className="relative aspect-[2/3] overflow-hidden rounded-md mb-3">
         <img
@@ -24,6 +26,11 @@ const BookCard = ({ book, onAddToCart, onSelect }: BookCardProps) => {
         {book.originalPrice && (
           <span className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs font-body font-bold px-2 py-1 rounded-full">
             {Math.round((1 - book.price / book.originalPrice) * 100)}% OFF
+          </span>
+        )}
+        {book.newArrival && (
+          <span className="absolute top-2 right-2 bg-foreground text-background text-xs font-body font-bold px-2 py-1 rounded-full">
+            NEW
           </span>
         )}
       </div>
