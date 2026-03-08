@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ type Review = {
   title: string;
   content: string | null;
   created_at: string;
-  profile?: { display_name: string | null };
+  display_name: string | null;
 };
 
 interface ReviewsSectionProps {
@@ -33,27 +33,57 @@ const ReviewsSection = ({ bookId }: ReviewsSectionProps) => {
   const [content, setContent] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     const { data } = await supabase
       .from("reviews")
-      .select("*, profiles(display_name)")
+      .select("id, user_id, book_id, rating, title, content, created_at, profiles(display_name)")
       .eq("book_id", bookId)
       .order("created_at", { ascending: false });
 
     if (data) {
       setReviews(
-        data.map((r) => ({
-          ...r,
-          profile: Array.isArray(r.profiles) ? r.profiles[0] : r.profiles,
-        })) as Review[]
+        data.map((r: any) => {
+          const profile = Array.isArray(r.profiles) ? r.profiles[0] : r.profiles;
+          return {
+            id: r.id,
+            user_id: r.user_id,
+            book_id: r.book_id,
+            rating: r.rating,
+            title: r.title,
+            content: r.content,
+            created_at: r.created_at,
+            display_name: profile?.display_name || null,
+          };
+        })
       );
     }
     setLoading(false);
-  };
+  }, [bookId]);
 
   useEffect(() => {
     fetchReviews();
-  }, [bookId]);
+
+    // Subscribe to realtime changes
+    const channel = supabase
+      .channel(`reviews-${bookId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "reviews",
+          filter: `book_id=eq.${bookId}`,
+        },
+        () => {
+          fetchReviews();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [bookId, fetchReviews]);
 
   const userHasReviewed = reviews.some((r) => r.user_id === user?.id);
 
@@ -83,7 +113,6 @@ const ReviewsSection = ({ bookId }: ReviewsSectionProps) => {
       setContent("");
       setRating(5);
       setShowForm(false);
-      fetchReviews();
     }
     setSubmitting(false);
   };
@@ -131,7 +160,6 @@ const ReviewsSection = ({ bookId }: ReviewsSectionProps) => {
         )}
       </div>
 
-      {/* Review Form */}
       {showForm && (
         <form
           onSubmit={handleSubmit}
@@ -201,7 +229,6 @@ const ReviewsSection = ({ bookId }: ReviewsSectionProps) => {
         </form>
       )}
 
-      {/* Reviews List */}
       {loading ? (
         <p className="font-body text-muted-foreground">Loading reviews...</p>
       ) : reviews.length === 0 ? (
@@ -216,11 +243,11 @@ const ReviewsSection = ({ bookId }: ReviewsSectionProps) => {
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-3">
                   <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center font-display font-bold text-primary text-xs">
-                    {(review.profile?.display_name || "U").charAt(0).toUpperCase()}
+                    {(review.display_name || "U").charAt(0).toUpperCase()}
                   </div>
                   <div>
                     <p className="font-body font-semibold text-sm text-card-foreground">
-                      {review.profile?.display_name || "Anonymous"}
+                      {review.display_name || "Anonymous"}
                     </p>
                     <p className="font-body text-xs text-muted-foreground">
                       {new Date(review.created_at).toLocaleDateString("en-US", {
