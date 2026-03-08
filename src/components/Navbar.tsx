@@ -54,19 +54,9 @@ const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
           ))}
         </div>
 
-        {onSearchChange && (
-          <div className="hidden md:flex items-center gap-2 flex-1 max-w-sm mx-8">
-            <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search books, authors..."
-                className="pl-10 bg-secondary/50 border-border font-body"
-                value={searchQuery}
-                onChange={(e) => onSearchChange(e.target.value)}
-              />
-            </div>
-          </div>
-        )}
+        <div className="hidden md:flex flex-1 max-w-sm mx-8">
+          <SearchAutocomplete />
+        </div>
 
         <div className="flex items-center gap-2">
           {user && (
