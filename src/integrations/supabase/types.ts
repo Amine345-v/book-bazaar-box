@@ -14,6 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
+      books: {
+        Row: {
+          author: string
+          bestseller: boolean
+          category: string
+          cover_key: string
+          created_at: string
+          description: string
+          featured: boolean
+          format: string
+          id: string
+          language: string
+          new_arrival: boolean
+          original_price: number | null
+          pages: number
+          price: number
+          publish_date: string
+          rating: number
+          reviews_count: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author: string
+          bestseller?: boolean
+          category: string
+          cover_key: string
+          created_at?: string
+          description?: string
+          featured?: boolean
+          format?: string
+          id: string
+          language?: string
+          new_arrival?: boolean
+          original_price?: number | null
+          pages?: number
+          price: number
+          publish_date?: string
+          rating?: number
+          reviews_count?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string
+          bestseller?: boolean
+          category?: string
+          cover_key?: string
+          created_at?: string
+          description?: string
+          featured?: boolean
+          format?: string
+          id?: string
+          language?: string
+          new_arrival?: boolean
+          original_price?: number | null
+          pages?: number
+          price?: number
+          publish_date?: string
+          rating?: number
+          reviews_count?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
