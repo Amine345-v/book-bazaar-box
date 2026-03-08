@@ -19,10 +19,10 @@ const About = () => {
         {/* Hero */}
         <section className="container mx-auto px-4 py-16 text-center max-w-3xl">
           <h1 className="font-display text-5xl font-bold text-foreground mb-4">
-            About PageTurn
+            About Book Bazaar
           </h1>
           <p className="font-body text-lg text-muted-foreground leading-relaxed">
-            We believe everyone deserves access to great stories. PageTurn was born from a love of reading and a desire to make ebooks more affordable, accessible, and beautiful. Our curated collection spans every genre, from pulse-pounding thrillers to soul-stirring poetry.
+            We believe everyone deserves access to great stories. Book Bazaar was born from a love of reading and a desire to make ebooks more affordable, accessible, and beautiful. Our curated collection spans every genre, from pulse-pounding thrillers to soul-stirring poetry.
           </p>
         </section>
 
@@ -48,13 +48,13 @@ const About = () => {
           </h2>
           <div className="font-body text-foreground/80 leading-relaxed space-y-4">
             <p>
-              Founded in 2023, PageTurn started as a small passion project by a group of bookworms who wanted to create a better ebook experience. We were frustrated by cluttered interfaces, DRM restrictions, and the lack of curation in existing platforms.
+              Founded in 2023, Book Bazaar started as a small passion project by a group of bookworms who wanted to create a better ebook experience. We were frustrated by cluttered interfaces, DRM restrictions, and the lack of curation in existing platforms.
             </p>
             <p>
               Today, we serve over 250,000 readers across 120 countries. Our team of editors handpicks every title in our Featured collection, ensuring you always find something worth reading. We work directly with publishers and independent authors to bring you the best prices possible.
             </p>
             <p>
-              Every ebook on PageTurn is DRM-free, meaning you truly own what you buy. Read on any device, any app, any time. That's our promise.
+              Every ebook on Book Bazaar is DRM-free, meaning you truly own what you buy. Read on any device, any app, any time. That's our promise.
             </p>
           </div>
         </section>

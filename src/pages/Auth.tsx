@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { lovable } from "@/integrations/lovable/index";
+import logo from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -79,8 +80,8 @@ const Auth = () => {
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <Link to="/" className="flex items-center justify-center gap-2 mb-8">
-          <BookOpen className="h-8 w-8 text-primary" />
-          <span className="font-display text-3xl font-bold text-foreground">PageTurn</span>
+          <img src={logo} alt="Book Bazaar" className="h-10 w-10 object-contain" />
+          <span className="font-display text-3xl font-bold text-foreground">Book Bazaar</span>
         </Link>
 
         <div className="bg-card rounded-xl p-8 shadow-book border border-border">

@@ -3,7 +3,7 @@ import { Star, Quote } from "lucide-react";
 const testimonials = [
   {
     name: "Sarah M.",
-    text: "PageTurn completely changed how I read. The collection is incredible, and the prices are unbeatable. I've discovered so many hidden gems!",
+    text: "Book Bazaar completely changed how I read. The collection is incredible, and the prices are unbeatable. I've discovered so many hidden gems!",
     rating: 5,
     avatar: "SM",
   },

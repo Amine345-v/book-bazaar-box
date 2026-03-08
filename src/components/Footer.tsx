@@ -1,5 +1,5 @@
-import { BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
+import logo from "@/assets/logo.png";
 
 const Footer = () => {
   return (
@@ -8,9 +8,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-3">
-              <BookOpen className="h-6 w-6 text-primary" />
+              <img src={logo} alt="Book Bazaar" className="h-7 w-7 object-contain" />
               <span className="font-display text-xl font-bold text-foreground">
-                PageTurn
+                Book Bazaar
               </span>
             </Link>
             <p className="font-body text-sm text-muted-foreground leading-relaxed">
@@ -60,7 +60,7 @@ const Footer = () => {
 
         <div className="border-t mt-10 pt-6 text-center">
           <p className="font-body text-sm text-muted-foreground">
-            © 2026 PageTurn. All rights reserved.
+            © 2026 Book Bazaar. All rights reserved.
           </p>
         </div>
       </div>
