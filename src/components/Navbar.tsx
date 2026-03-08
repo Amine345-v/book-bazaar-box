@@ -110,6 +110,11 @@ const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
                   </p>
                 </div>
                 <DropdownMenuSeparator />
+                {isAdmin && (
+                  <DropdownMenuItem onClick={() => navigate("/admin")} className="font-body cursor-pointer text-primary">
+                    <Shield className="h-4 w-4 mr-2" /> Admin Panel
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem onClick={() => navigate("/profile")} className="font-body cursor-pointer">
                   <UserCircle className="h-4 w-4 mr-2" /> {t("nav.myProfile")}
                 </DropdownMenuItem>
