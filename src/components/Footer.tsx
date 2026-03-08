@@ -21,10 +21,15 @@ const Footer = () => {
           <div>
             <h4 className="font-display font-semibold text-foreground mb-3">Shop</h4>
             <ul className="space-y-2">
-              {["Browse All", "New Arrivals", "Bestsellers", "On Sale"].map((item) => (
-                <li key={item}>
-                  <Link to="/browse" className="font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    {item}
+              {[
+                { label: "Browse All", to: "/browse" },
+                { label: "New Arrivals", to: "/browse?filter=new" },
+                { label: "Bestsellers", to: "/browse?filter=bestseller" },
+                { label: "On Sale", to: "/browse?filter=sale" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link to={item.to} className="font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -36,7 +41,7 @@ const Footer = () => {
             <ul className="space-y-2">
               {["Mystery", "Romance", "Sci-Fi", "Fantasy", "Self-Help"].map((item) => (
                 <li key={item}>
-                  <Link to="/categories" className="font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <Link to={`/categories?category=${encodeURIComponent(item)}`} className="font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
                     {item}
                   </Link>
                 </li>
@@ -47,10 +52,15 @@ const Footer = () => {
           <div>
             <h4 className="font-display font-semibold text-foreground mb-3">Company</h4>
             <ul className="space-y-2">
-              {["About Us", "Contact", "Privacy Policy", "Terms of Service"].map((item) => (
-                <li key={item}>
-                  <Link to="/about" className="font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    {item}
+              {[
+                { label: "About Us", to: "/about" },
+                { label: "Contact", to: "/contact" },
+                { label: "Privacy Policy", to: "/privacy" },
+                { label: "Terms of Service", to: "/terms" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link to={item.to} className="font-body text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    {item.label}
                   </Link>
                 </li>
               ))}

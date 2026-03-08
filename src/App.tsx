@@ -12,6 +12,9 @@ import Categories from "./pages/Categories";
 import BookDetail from "./pages/BookDetail";
 import Cart from "./pages/Cart";
 import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import Auth from "./pages/Auth";
 import Wishlist from "./pages/Wishlist";
 import Purchases from "./pages/Purchases";
@@ -37,6 +40,9 @@ const App = () => (
                 <Route path="/book/:id" element={<BookDetail />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/wishlist" element={<Wishlist />} />
                 <Route path="/purchases" element={<Purchases />} />
