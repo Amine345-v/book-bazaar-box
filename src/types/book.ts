@@ -1,3 +1,5 @@
+export type I18nField = Record<string, string>;
+
 export type Book = {
   id: string;
   title: string;
@@ -16,4 +18,9 @@ export type Book = {
   language: string;
   format: string;
   publishDate: string;
+  // i18n fields
+  titleI18n?: I18nField;
+  descriptionI18n?: I18nField;
+  categoryI18n?: I18nField;
+  formatI18n?: I18nField;
 };

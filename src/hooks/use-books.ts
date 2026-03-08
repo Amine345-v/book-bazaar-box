@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Book } from "@/types/book";
+import { useTranslation } from "react-i18next";
+import { useMemo } from "react";
+import type { Book, I18nField } from "@/types/book";
 
 // Static cover image imports
 import bookCover1 from "@/assets/book-cover-1.jpg";
@@ -57,15 +59,41 @@ async function fetchBooks(): Promise<Book[]> {
     language: row.language,
     format: row.format,
     publishDate: row.publish_date,
+    titleI18n: (row as any).title_i18n as I18nField | undefined,
+    descriptionI18n: (row as any).description_i18n as I18nField | undefined,
+    categoryI18n: (row as any).category_i18n as I18nField | undefined,
+    formatI18n: (row as any).format_i18n as I18nField | undefined,
   }));
 }
 
+/** Resolve an i18n field for the current language, falling back to English then the raw value */
+function localize(i18nField: I18nField | undefined, fallback: string, lang: string): string {
+  if (!i18nField || Object.keys(i18nField).length === 0) return fallback;
+  return i18nField[lang] || i18nField["en"] || fallback;
+}
+
 export function useBooks() {
-  return useQuery({
+  const { i18n } = useTranslation();
+  const lang = i18n.language?.split("-")[0] || "en";
+
+  const query = useQuery({
     queryKey: ["books"],
     queryFn: fetchBooks,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
+
+  const localizedBooks = useMemo(() => {
+    if (!query.data) return undefined;
+    return query.data.map((book) => ({
+      ...book,
+      title: localize(book.titleI18n, book.title, lang),
+      description: localize(book.descriptionI18n, book.description, lang),
+      category: localize(book.categoryI18n, book.category, lang),
+      format: localize(book.formatI18n, book.format, lang),
+    }));
+  }, [query.data, lang]);
+
+  return { ...query, data: localizedBooks };
 }
 
 export function useBook(id: string | undefined) {

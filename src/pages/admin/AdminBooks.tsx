@@ -10,10 +10,9 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, Languages } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
 type BookFormData = {
@@ -56,7 +55,22 @@ const AdminBooks = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<BookFormData>(emptyForm);
+  const [translating, setTranslating] = useState(false);
   const queryClient = useQueryClient();
+
+  const handleTranslateAll = async () => {
+    setTranslating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("translate-books");
+      if (error) throw error;
+      toast.success(data?.message || "Translation complete");
+      queryClient.invalidateQueries({ queryKey: ["books"] });
+    } catch (e: any) {
+      toast.error(e.message || "Translation failed");
+    } finally {
+      setTranslating(false);
+    }
+  };
 
   const filteredBooks = books.filter(
     (b) =>
@@ -149,11 +163,16 @@ const AdminBooks = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <h1 className="font-display text-3xl font-bold text-foreground">Books</h1>
-        <Button className="font-body gap-2" onClick={openCreate}>
-          <Plus className="h-4 w-4" /> Add Book
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" className="font-body gap-2" onClick={handleTranslateAll} disabled={translating}>
+            <Languages className="h-4 w-4" /> {translating ? "Translating..." : "Translate All"}
+          </Button>
+          <Button className="font-body gap-2" onClick={openCreate}>
+            <Plus className="h-4 w-4" /> Add Book
+          </Button>
+        </div>
       </div>
 
       <div className="relative mb-6 max-w-sm">
