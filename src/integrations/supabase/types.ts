@@ -19,11 +19,14 @@ export type Database = {
           author: string
           bestseller: boolean
           category: string
+          category_i18n: Json | null
           cover_key: string
           created_at: string
           description: string
+          description_i18n: Json | null
           featured: boolean
           format: string
+          format_i18n: Json | null
           id: string
           language: string
           new_arrival: boolean
@@ -34,17 +37,21 @@ export type Database = {
           rating: number
           reviews_count: number
           title: string
+          title_i18n: Json | null
           updated_at: string
         }
         Insert: {
           author: string
           bestseller?: boolean
           category: string
+          category_i18n?: Json | null
           cover_key: string
           created_at?: string
           description?: string
+          description_i18n?: Json | null
           featured?: boolean
           format?: string
+          format_i18n?: Json | null
           id: string
           language?: string
           new_arrival?: boolean
@@ -55,17 +62,21 @@ export type Database = {
           rating?: number
           reviews_count?: number
           title: string
+          title_i18n?: Json | null
           updated_at?: string
         }
         Update: {
           author?: string
           bestseller?: boolean
           category?: string
+          category_i18n?: Json | null
           cover_key?: string
           created_at?: string
           description?: string
+          description_i18n?: Json | null
           featured?: boolean
           format?: string
+          format_i18n?: Json | null
           id?: string
           language?: string
           new_arrival?: boolean
@@ -76,6 +87,7 @@ export type Database = {
           rating?: number
           reviews_count?: number
           title?: string
+          title_i18n?: Json | null
           updated_at?: string
         }
         Relationships: []
