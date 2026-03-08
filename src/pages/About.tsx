@@ -22,7 +22,7 @@ const About = () => {
             About Book Bazaar
           </h1>
           <p className="font-body text-lg text-muted-foreground leading-relaxed">
-            We believe everyone deserves access to great stories. PageTurn was born from a love of reading and a desire to make ebooks more affordable, accessible, and beautiful. Our curated collection spans every genre, from pulse-pounding thrillers to soul-stirring poetry.
+            We believe everyone deserves access to great stories. Book Bazaar was born from a love of reading and a desire to make ebooks more affordable, accessible, and beautiful. Our curated collection spans every genre, from pulse-pounding thrillers to soul-stirring poetry.
           </p>
         </section>
 
