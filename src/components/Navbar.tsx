@@ -1,8 +1,9 @@
-import { ShoppingCart, Menu, User, LogOut, Heart, UserCircle } from "lucide-react";
+import { ShoppingCart, Menu, User, LogOut, Heart, UserCircle, Shield } from "lucide-react";
 import logo from "@/assets/logo.png";
 import SearchAutocomplete from "@/components/SearchAutocomplete";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useIsAdmin } from "@/hooks/use-admin";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -28,6 +29,7 @@ const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { data: isAdmin } = useIsAdmin();
 
   const navLinks = [
     { label: t("nav.home"), href: "/" },
@@ -108,6 +110,11 @@ const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
                   </p>
                 </div>
                 <DropdownMenuSeparator />
+                {isAdmin && (
+                  <DropdownMenuItem onClick={() => navigate("/admin")} className="font-body cursor-pointer text-primary">
+                    <Shield className="h-4 w-4 mr-2" /> Admin Panel
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem onClick={() => navigate("/profile")} className="font-body cursor-pointer">
                   <UserCircle className="h-4 w-4 mr-2" /> {t("nav.myProfile")}
                 </DropdownMenuItem>
