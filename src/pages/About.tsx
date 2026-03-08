@@ -48,7 +48,7 @@ const About = () => {
           </h2>
           <div className="font-body text-foreground/80 leading-relaxed space-y-4">
             <p>
-              Founded in 2023, PageTurn started as a small passion project by a group of bookworms who wanted to create a better ebook experience. We were frustrated by cluttered interfaces, DRM restrictions, and the lack of curation in existing platforms.
+              Founded in 2023, Book Bazaar started as a small passion project by a group of bookworms who wanted to create a better ebook experience. We were frustrated by cluttered interfaces, DRM restrictions, and the lack of curation in existing platforms.
             </p>
             <p>
               Today, we serve over 250,000 readers across 120 countries. Our team of editors handpicks every title in our Featured collection, ensuring you always find something worth reading. We work directly with publishers and independent authors to bring you the best prices possible.
