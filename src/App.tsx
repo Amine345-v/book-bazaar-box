@@ -21,6 +21,11 @@ import Purchases from "./pages/Purchases";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
+import AdminLayout from "./components/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminBooks from "./pages/admin/AdminBooks";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminUsers from "./pages/admin/AdminUsers";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +53,13 @@ const App = () => (
                 <Route path="/purchases" element={<Purchases />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route path="/profile" element={<Profile />} />
+                {/* Admin routes */}
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<AdminDashboard />} />
+                  <Route path="books" element={<AdminBooks />} />
+                  <Route path="orders" element={<AdminOrders />} />
+                  <Route path="users" element={<AdminUsers />} />
+                </Route>
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
