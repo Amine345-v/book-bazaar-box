@@ -2,6 +2,7 @@ import { Star, ShoppingCart, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { useTranslation } from "react-i18next";
 import type { Book } from "@/types/book";
 
 interface BookCardProps {
@@ -12,6 +13,7 @@ interface BookCardProps {
 const BookCard = ({ book, onAddToCart }: BookCardProps) => {
   const navigate = useNavigate();
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { t } = useTranslation();
   const wishlisted = isInWishlist(book.id);
 
   return (
@@ -28,12 +30,12 @@ const BookCard = ({ book, onAddToCart }: BookCardProps) => {
         />
         {book.originalPrice && (
           <span className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs font-body font-bold px-2 py-1 rounded-full">
-            {Math.round((1 - book.price / book.originalPrice) * 100)}% OFF
+            {Math.round((1 - book.price / book.originalPrice) * 100)}{t("bookCard.off")}
           </span>
         )}
         {book.newArrival && (
           <span className="absolute top-2 right-2 bg-foreground text-background text-xs font-body font-bold px-2 py-1 rounded-full">
-            NEW
+            {t("bookCard.new")}
           </span>
         )}
         <button

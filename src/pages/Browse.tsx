@@ -14,16 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslation } from "react-i18next";
 
 type SortOption = "rating" | "price-low" | "price-high" | "date-newest" | "date-oldest";
-
-const sortLabels: Record<SortOption, string> = {
-  "rating": "Highest Rated",
-  "price-low": "Price: Low → High",
-  "price-high": "Price: High → Low",
-  "date-newest": "Newest First",
-  "date-oldest": "Oldest First",
-};
 
 const BOOKS_PER_PAGE = 10;
 
@@ -34,6 +27,15 @@ const Browse = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { addToCart } = useCart();
   const { data: books = [], isLoading } = useBooks();
+  const { t } = useTranslation();
+
+  const sortLabels: Record<SortOption, string> = {
+    "rating": t("browse.highestRated"),
+    "price-low": t("browse.priceLowHigh"),
+    "price-high": t("browse.priceHighLow"),
+    "date-newest": t("browse.newestFirst"),
+    "date-oldest": t("browse.oldestFirst"),
+  };
 
   const filteredBooks = useMemo(() => {
     const filtered = books.filter((book) => {
@@ -47,18 +49,12 @@ const Browse = () => {
 
     return [...filtered].sort((a, b) => {
       switch (sortBy) {
-        case "rating":
-          return b.rating - a.rating;
-        case "price-low":
-          return a.price - b.price;
-        case "price-high":
-          return b.price - a.price;
-        case "date-newest":
-          return new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime();
-        case "date-oldest":
-          return new Date(a.publishDate).getTime() - new Date(b.publishDate).getTime();
-        default:
-          return 0;
+        case "rating": return b.rating - a.rating;
+        case "price-low": return a.price - b.price;
+        case "price-high": return b.price - a.price;
+        case "date-newest": return new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime();
+        case "date-oldest": return new Date(a.publishDate).getTime() - new Date(b.publishDate).getTime();
+        default: return 0;
       }
     });
   }, [books, activeCategory, searchQuery, sortBy]);
@@ -82,40 +78,36 @@ const Browse = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-
       <main className="container mx-auto px-4 py-10">
         <div className="mb-8">
-          <h1 className="font-display text-4xl font-bold text-foreground mb-2">
-            Browse Ebooks
-          </h1>
+          <h1 className="font-display text-4xl font-bold text-foreground mb-2">{t("browse.title")}</h1>
           <p className="font-body text-muted-foreground">
-            Explore our complete collection of {books.length} titles
+            {t("browse.subtitle", { count: books.length })}
           </p>
         </div>
 
         <div className="mb-8">
-          <CategoryFilter
-            activeCategory={activeCategory}
-            onCategoryChange={handleCategoryChange}
-          />
+          <CategoryFilter activeCategory={activeCategory} onCategoryChange={handleCategoryChange} />
         </div>
 
         {isLoading ? (
           <div className="text-center py-20">
-            <p className="font-body text-muted-foreground">Loading books...</p>
+            <p className="font-body text-muted-foreground">{t("sections.loadingBooks")}</p>
           </div>
         ) : filteredBooks.length === 0 ? (
           <div className="text-center py-20">
-            <p className="font-display text-2xl text-muted-foreground">No books found</p>
-            <p className="font-body text-muted-foreground mt-2">
-              Try a different search or category
-            </p>
+            <p className="font-display text-2xl text-muted-foreground">{t("browse.noBooks")}</p>
+            <p className="font-body text-muted-foreground mt-2">{t("browse.noBooksHint")}</p>
           </div>
         ) : (
           <>
             <div className="flex items-center justify-between mb-4">
               <p className="font-body text-sm text-muted-foreground">
-                Showing {(currentPage - 1) * BOOKS_PER_PAGE + 1}–{Math.min(currentPage * BOOKS_PER_PAGE, filteredBooks.length)} of {filteredBooks.length} book{filteredBooks.length !== 1 ? "s" : ""}
+                {t("browse.showing", {
+                  from: (currentPage - 1) * BOOKS_PER_PAGE + 1,
+                  to: Math.min(currentPage * BOOKS_PER_PAGE, filteredBooks.length),
+                  total: filteredBooks.length,
+                })}
               </p>
               <div className="flex items-center gap-2">
                 <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
@@ -174,7 +166,6 @@ const Browse = () => {
           </>
         )}
       </main>
-
       <Footer />
     </div>
   );
