@@ -59,6 +59,10 @@ async function fetchBooks(): Promise<Book[]> {
     language: row.language,
     format: row.format,
     publishDate: row.publish_date,
+    titleI18n: (row as any).title_i18n as I18nField | undefined,
+    descriptionI18n: (row as any).description_i18n as I18nField | undefined,
+    categoryI18n: (row as any).category_i18n as I18nField | undefined,
+    formatI18n: (row as any).format_i18n as I18nField | undefined,
   }));
 }
 
