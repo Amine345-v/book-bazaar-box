@@ -102,6 +102,9 @@ const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
                   </p>
                 </div>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("/profile")} className="font-body cursor-pointer">
+                  <UserCircle className="h-4 w-4 mr-2" /> My Profile
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate("/wishlist")} className="font-body cursor-pointer">
                   <Heart className="h-4 w-4 mr-2" /> My Wishlist
                 </DropdownMenuItem>
