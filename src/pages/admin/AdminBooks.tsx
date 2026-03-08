@@ -163,11 +163,16 @@ const AdminBooks = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <h1 className="font-display text-3xl font-bold text-foreground">Books</h1>
-        <Button className="font-body gap-2" onClick={openCreate}>
-          <Plus className="h-4 w-4" /> Add Book
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" className="font-body gap-2" onClick={handleTranslateAll} disabled={translating}>
+            <Languages className="h-4 w-4" /> {translating ? "Translating..." : "Translate All"}
+          </Button>
+          <Button className="font-body gap-2" onClick={openCreate}>
+            <Plus className="h-4 w-4" /> Add Book
+          </Button>
+        </div>
       </div>
 
       <div className="relative mb-6 max-w-sm">
