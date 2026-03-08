@@ -69,28 +69,37 @@ const ReviewsSection = ({ bookId }: ReviewsSectionProps) => {
   const [submitting, setSubmitting] = useState(false);
 
   const fetchReviews = useCallback(async () => {
-    const { data } = await supabase
+    const { data: reviewsData } = await supabase
       .from("reviews")
-      .select("id, user_id, book_id, rating, title, content, created_at, profiles(display_name)")
+      .select("id, user_id, book_id, rating, title, content, created_at")
       .eq("book_id", bookId)
       .order("created_at", { ascending: false });
 
-    if (data) {
-      setReviews(
-        data.map((r: any) => {
-          const profile = Array.isArray(r.profiles) ? r.profiles[0] : r.profiles;
-          return {
-            id: r.id,
-            user_id: r.user_id,
-            book_id: r.book_id,
-            rating: r.rating,
-            title: r.title,
-            content: r.content,
-            created_at: r.created_at,
-            display_name: profile?.display_name || null,
-          };
-        })
+    if (reviewsData && reviewsData.length > 0) {
+      const userIds = [...new Set(reviewsData.map((r) => r.user_id))];
+      const { data: profilesData } = await supabase
+        .from("profiles")
+        .select("user_id, display_name")
+        .in("user_id", userIds);
+
+      const profileMap = new Map(
+        (profilesData || []).map((p) => [p.user_id, p.display_name])
       );
+
+      setReviews(
+        reviewsData.map((r) => ({
+          id: r.id,
+          user_id: r.user_id,
+          book_id: r.book_id,
+          rating: r.rating,
+          title: r.title,
+          content: r.content,
+          created_at: r.created_at,
+          display_name: profileMap.get(r.user_id) || null,
+        }))
+      );
+    } else {
+      setReviews([]);
     }
     setLoading(false);
   }, [bookId]);
