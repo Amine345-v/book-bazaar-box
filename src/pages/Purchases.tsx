@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
-import { books } from "@/data/books";
+import { useBooks } from "@/hooks/use-books";
 import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -21,13 +21,14 @@ const Purchases = () => {
   const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { data: books = [] } = useBooks();
 
   useEffect(() => {
     if (!user) {
       setLoading(false);
       return;
     }
-    const fetch = async () => {
+    const fetchPurchases = async () => {
       const { data } = await supabase
         .from("purchases")
         .select("*")
@@ -36,7 +37,7 @@ const Purchases = () => {
       if (data) setPurchases(data);
       setLoading(false);
     };
-    fetch();
+    fetchPurchases();
   }, [user]);
 
   if (!user) {

@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 import { toast } from "sonner";
-import type { Book } from "@/data/books";
+import type { Book } from "@/types/book";
 
 export type CartItem = {
   book: Book;

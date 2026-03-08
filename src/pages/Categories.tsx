@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { books, categories } from "@/data/books";
+import { useBooks } from "@/hooks/use-books";
+import { categories } from "@/data/books";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
@@ -19,6 +20,7 @@ const categoryColors: Record<string, string> = {
 
 const Categories = () => {
   const navigate = useNavigate();
+  const { data: books = [], isLoading } = useBooks();
 
   const categoryData = categories
     .filter((c) => c !== "All")
@@ -45,35 +47,39 @@ const Categories = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {categoryData.map((cat) => (
-            <button
-              key={cat.name}
-              onClick={() => navigate("/browse")}
-              className="group relative h-48 rounded-xl overflow-hidden shadow-book hover:shadow-book-hover transition-all duration-300 text-left"
-            >
-              {cat.cover && (
-                <img
-                  src={cat.cover}
-                  alt={cat.name}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-              )}
-              <div className={`absolute inset-0 bg-gradient-to-br ${categoryColors[cat.name] || "from-gray-900/80 to-gray-700/60"}`} />
-              <div className="relative h-full p-6 flex flex-col justify-end">
-                <h3 className="font-display text-2xl font-bold text-primary-foreground mb-1">
-                  {cat.name}
-                </h3>
-                <div className="flex items-center justify-between">
-                  <p className="font-body text-sm text-primary-foreground/70">
-                    {cat.count} title{cat.count !== 1 ? "s" : ""}
-                  </p>
-                  <ArrowRight className="h-5 w-5 text-primary-foreground/70 group-hover:translate-x-1 transition-transform" />
+        {isLoading ? (
+          <p className="font-body text-muted-foreground">Loading...</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {categoryData.map((cat) => (
+              <button
+                key={cat.name}
+                onClick={() => navigate("/browse")}
+                className="group relative h-48 rounded-xl overflow-hidden shadow-book hover:shadow-book-hover transition-all duration-300 text-left"
+              >
+                {cat.cover && (
+                  <img
+                    src={cat.cover}
+                    alt={cat.name}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                )}
+                <div className={`absolute inset-0 bg-gradient-to-br ${categoryColors[cat.name] || "from-gray-900/80 to-gray-700/60"}`} />
+                <div className="relative h-full p-6 flex flex-col justify-end">
+                  <h3 className="font-display text-2xl font-bold text-primary-foreground mb-1">
+                    {cat.name}
+                  </h3>
+                  <div className="flex items-center justify-between">
+                    <p className="font-body text-sm text-primary-foreground/70">
+                      {cat.count} title{cat.count !== 1 ? "s" : ""}
+                    </p>
+                    <ArrowRight className="h-5 w-5 text-primary-foreground/70 group-hover:translate-x-1 transition-transform" />
+                  </div>
                 </div>
-              </div>
-            </button>
-          ))}
-        </div>
+              </button>
+            ))}
+          </div>
+        )}
       </main>
 
       <Footer />

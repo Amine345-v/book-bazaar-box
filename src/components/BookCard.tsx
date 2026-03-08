@@ -2,7 +2,7 @@ import { Star, ShoppingCart, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useWishlist } from "@/contexts/WishlistContext";
-import type { Book } from "@/data/books";
+import type { Book } from "@/types/book";
 
 interface BookCardProps {
   book: Book;

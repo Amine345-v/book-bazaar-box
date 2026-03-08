@@ -4,7 +4,7 @@ import BookCard from "@/components/BookCard";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { books } from "@/data/books";
+import { useBooks } from "@/hooks/use-books";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +13,7 @@ const Wishlist = () => {
   const { user } = useAuth();
   const { wishlistIds } = useWishlist();
   const { addToCart } = useCart();
+  const { data: books = [] } = useBooks();
   const navigate = useNavigate();
 
   if (!user) {
