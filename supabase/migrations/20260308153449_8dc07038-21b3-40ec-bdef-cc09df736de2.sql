@@ -1,0 +1,1 @@
+DROP POLICY "Users can insert their own purchases" ON public.purchases;

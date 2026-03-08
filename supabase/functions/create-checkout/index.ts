@@ -17,6 +17,12 @@ serve(async (req) => {
     Deno.env.get("SUPABASE_ANON_KEY") ?? ""
   );
 
+  // Admin client to fetch authoritative book prices
+  const supabaseAdmin = createClient(
+    Deno.env.get("SUPABASE_URL") ?? "",
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+  );
+
   try {
     const authHeader = req.headers.get("Authorization")!;
     const token = authHeader.replace("Bearer ", "");
@@ -27,6 +33,29 @@ serve(async (req) => {
     const { items } = await req.json();
     if (!items || !Array.isArray(items) || items.length === 0) {
       throw new Error("No items provided");
+    }
+
+    // Extract book IDs and validate
+    const bookIds = items.map((item: { bookId: string }) => item.bookId);
+    if (bookIds.some((id: string) => !id || typeof id !== "string")) {
+      throw new Error("Invalid book ID provided");
+    }
+
+    // Fetch authoritative prices from the database
+    const { data: books, error: booksError } = await supabaseAdmin
+      .from("books")
+      .select("id, title, price")
+      .in("id", bookIds);
+
+    if (booksError) throw new Error("Failed to fetch book prices");
+    if (!books || books.length === 0) throw new Error("No valid books found");
+
+    // Verify all requested books exist
+    const bookMap = new Map(books.map((b: { id: string; title: string; price: number }) => [b.id, b]));
+    for (const bookId of bookIds) {
+      if (!bookMap.has(bookId)) {
+        throw new Error(`Book not found: ${bookId}`);
+      }
     }
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
@@ -40,18 +69,22 @@ serve(async (req) => {
       customerId = customers.data[0].id;
     }
 
-    // Build line items from cart items
-    const lineItems = items.map((item: { title: string; price: number; quantity: number; bookId: string }) => ({
-      price_data: {
-        currency: "usd",
-        product_data: {
-          name: item.title,
-          metadata: { book_id: item.bookId },
+    // Build line items using SERVER-SIDE prices only
+    const lineItems = items.map((item: { bookId: string; quantity: number }) => {
+      const book = bookMap.get(item.bookId)!;
+      const quantity = Math.max(1, Math.floor(Number(item.quantity) || 1));
+      return {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: book.title,
+            metadata: { book_id: book.id },
+          },
+          unit_amount: Math.round(Number(book.price) * 100),
         },
-        unit_amount: Math.round(item.price * 100),
-      },
-      quantity: item.quantity,
-    }));
+        quantity,
+      };
+    });
 
     const origin = req.headers.get("origin") || "http://localhost:3000";
 
@@ -64,7 +97,7 @@ serve(async (req) => {
       cancel_url: `${origin}/cart`,
       metadata: {
         user_id: user.id,
-        book_ids: items.map((i: { bookId: string }) => i.bookId).join(","),
+        book_ids: bookIds.join(","),
       },
     });
 
