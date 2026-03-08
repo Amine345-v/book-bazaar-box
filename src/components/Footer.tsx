@@ -8,9 +8,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-3">
-              <BookOpen className="h-6 w-6 text-primary" />
+              <img src={logo} alt="Book Bazaar" className="h-7 w-7 object-contain" />
               <span className="font-display text-xl font-bold text-foreground">
-                PageTurn
+                Book Bazaar
               </span>
             </Link>
             <p className="font-body text-sm text-muted-foreground leading-relaxed">
