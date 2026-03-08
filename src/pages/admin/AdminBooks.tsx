@@ -55,7 +55,22 @@ const AdminBooks = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<BookFormData>(emptyForm);
+  const [translating, setTranslating] = useState(false);
   const queryClient = useQueryClient();
+
+  const handleTranslateAll = async () => {
+    setTranslating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("translate-books");
+      if (error) throw error;
+      toast.success(data?.message || "Translation complete");
+      queryClient.invalidateQueries({ queryKey: ["books"] });
+    } catch (e: any) {
+      toast.error(e.message || "Translation failed");
+    } finally {
+      setTranslating(false);
+    }
+  };
 
   const filteredBooks = books.filter(
     (b) =>
