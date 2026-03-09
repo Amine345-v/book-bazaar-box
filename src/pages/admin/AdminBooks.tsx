@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useBooks } from "@/hooks/use-books";
-import { supabase } from "@/integrations/supabase/client";
+import { useBooks, useCreateBook, useUpdateBook, useDeleteBook, useTranslateBooks } from "@/hooks/use-books";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,9 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Search, Languages } from "lucide-react";
-import { useQueryClient } from "@tanstack/react-query";
 
 type BookFormData = {
   id: string;
@@ -51,26 +48,15 @@ const emptyForm: BookFormData = {
 
 const AdminBooks = () => {
   const { data: books = [], isLoading } = useBooks();
+  const createBook = useCreateBook();
+  const updateBook = useUpdateBook();
+  const deleteBook = useDeleteBook();
+  const translateBooks = useTranslateBooks();
+
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<BookFormData>(emptyForm);
-  const [translating, setTranslating] = useState(false);
-  const queryClient = useQueryClient();
-
-  const handleTranslateAll = async () => {
-    setTranslating(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("translate-books");
-      if (error) throw error;
-      toast.success(data?.message || "Translation complete");
-      queryClient.invalidateQueries({ queryKey: ["books"] });
-    } catch (e: any) {
-      toast.error(e.message || "Translation failed");
-    } finally {
-      setTranslating(false);
-    }
-  };
 
   const filteredBooks = books.filter(
     (b) =>
@@ -105,11 +91,8 @@ const AdminBooks = () => {
     setDialogOpen(true);
   };
 
-  const handleSave = async () => {
-    if (!form.title || !form.author || !form.price || !form.category) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
+  const handleSave = () => {
+    if (!form.title || !form.author || !form.price || !form.category) return;
 
     const row = {
       id: form.id,
@@ -128,33 +111,13 @@ const AdminBooks = () => {
       new_arrival: form.new_arrival,
     };
 
-    let error;
-    if (editingId) {
-      const { error: e } = await supabase.from("books").update(row).eq("id", editingId);
-      error = e;
-    } else {
-      const { error: e } = await supabase.from("books").insert(row);
-      error = e;
-    }
-
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success(editingId ? "Book updated" : "Book created");
-      queryClient.invalidateQueries({ queryKey: ["books"] });
-      setDialogOpen(false);
-    }
+    const mutation = editingId ? updateBook : createBook;
+    mutation.mutate(row, { onSuccess: () => setDialogOpen(false) });
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = (id: string) => {
     if (!confirm("Are you sure you want to delete this book?")) return;
-    const { error } = await supabase.from("books").delete().eq("id", id);
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success("Book deleted");
-      queryClient.invalidateQueries({ queryKey: ["books"] });
-    }
+    deleteBook.mutate(id);
   };
 
   const updateForm = (field: keyof BookFormData, value: string | boolean) => {
@@ -166,8 +129,8 @@ const AdminBooks = () => {
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <h1 className="font-display text-3xl font-bold text-foreground">Books</h1>
         <div className="flex gap-2">
-          <Button variant="outline" className="font-body gap-2" onClick={handleTranslateAll} disabled={translating}>
-            <Languages className="h-4 w-4" /> {translating ? "Translating..." : "Translate All"}
+          <Button variant="outline" className="font-body gap-2" onClick={() => translateBooks.mutate()} disabled={translateBooks.isPending}>
+            <Languages className="h-4 w-4" /> {translateBooks.isPending ? "Translating..." : "Translate All"}
           </Button>
           <Button className="font-body gap-2" onClick={openCreate}>
             <Plus className="h-4 w-4" /> Add Book
@@ -306,7 +269,7 @@ const AdminBooks = () => {
                 <Label className="font-body text-sm">New Arrival</Label>
               </div>
             </div>
-            <Button className="w-full font-body font-semibold" onClick={handleSave}>
+            <Button className="w-full font-body font-semibold" onClick={handleSave} disabled={createBook.isPending || updateBook.isPending}>
               {editingId ? "Save Changes" : "Create Book"}
             </Button>
           </div>

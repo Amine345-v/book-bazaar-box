@@ -1,48 +1,42 @@
-import { Star, ShoppingCart, Heart } from "lucide-react";
+import { Heart, ShoppingCart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { useWishlist } from "@/stores/wishlist-store";
+import { useToggleWishlist } from "@/hooks/use-wishlist";
 import { useTranslation } from "react-i18next";
 import type { Book } from "@/types/book";
 
 interface BookCardProps {
   book: Book;
-  onAddToCart: (book: Book) => void;
+  onAddToCart?: (book: Book) => void;
 }
 
 const BookCard = ({ book, onAddToCart }: BookCardProps) => {
   const navigate = useNavigate();
-  const { isInWishlist, toggleWishlist } = useWishlist();
+  const { isInWishlist, toggleWishlist } = useToggleWishlist();
   const { t } = useTranslation();
   const wishlisted = isInWishlist(book.id);
 
   return (
-    <div
-      className="group cursor-pointer rounded-lg bg-card p-3 transition-all duration-300 hover:-translate-y-1 shadow-book hover:shadow-book-hover"
-      onClick={() => navigate(`/book/${book.id}`)}
-    >
-      <div className="relative aspect-[2/3] overflow-hidden rounded-md mb-3">
+    <div className="group bg-card rounded-xl shadow-book hover:shadow-book-hover transition-all duration-300 overflow-hidden">
+      <div
+        className="relative cursor-pointer overflow-hidden"
+        onClick={() => navigate(`/book/${book.id}`)}
+      >
         <img
           src={book.cover}
           alt={book.title}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          loading="lazy"
+          className="w-full aspect-[2/3] object-cover group-hover:scale-105 transition-transform duration-500"
         />
         {book.originalPrice && (
           <span className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs font-body font-bold px-2 py-1 rounded-full">
-            {Math.round((1 - book.price / book.originalPrice) * 100)}{t("bookCard.off")}
-          </span>
-        )}
-        {book.newArrival && (
-          <span className="absolute top-2 right-2 bg-foreground text-background text-xs font-body font-bold px-2 py-1 rounded-full">
-            {t("bookCard.new")}
+            {Math.round((1 - book.price / book.originalPrice) * 100)}% OFF
           </span>
         )}
         <button
-          className={`absolute bottom-2 right-2 h-8 w-8 rounded-full flex items-center justify-center transition-all ${
+          className={`absolute top-2 right-2 p-1.5 rounded-full transition-colors ${
             wishlisted
               ? "bg-primary text-primary-foreground"
-              : "bg-card/80 backdrop-blur-sm text-muted-foreground hover:text-primary"
+              : "bg-card/80 text-card-foreground hover:bg-primary hover:text-primary-foreground"
           }`}
           onClick={(e) => {
             e.stopPropagation();
@@ -53,44 +47,56 @@ const BookCard = ({ book, onAddToCart }: BookCardProps) => {
         </button>
       </div>
 
-      <div className="space-y-1.5">
-        <h3 className="font-display text-lg font-semibold leading-tight line-clamp-1 text-card-foreground">
+      <div className="p-4">
+        <p className="text-xs uppercase tracking-wider text-primary font-body font-semibold mb-1">
+          {book.category}
+        </p>
+        <h3
+          className="font-display text-lg font-bold text-card-foreground leading-tight mb-1 cursor-pointer hover:text-primary transition-colors line-clamp-2"
+          onClick={() => navigate(`/book/${book.id}`)}
+        >
           {book.title}
         </h3>
-        <p className="text-muted-foreground font-body text-sm">{book.author}</p>
+        <p className="font-body text-sm text-muted-foreground mb-2">{book.author}</p>
 
-        <div className="flex items-center gap-1">
-          <Star className="h-3.5 w-3.5 fill-primary text-primary" />
-          <span className="text-sm font-body font-medium text-card-foreground">
-            {book.rating}
-          </span>
-          <span className="text-xs text-muted-foreground font-body">
-            ({book.reviews.toLocaleString()})
+        <div className="flex items-center gap-1 mb-3">
+          {[...Array(5)].map((_, i) => (
+            <Star
+              key={i}
+              className={`h-3.5 w-3.5 ${
+                i < Math.floor(book.rating)
+                  ? "fill-primary text-primary"
+                  : "text-border"
+              }`}
+            />
+          ))}
+          <span className="font-body text-xs text-muted-foreground ml-1">
+            ({book.reviews})
           </span>
         </div>
 
-        <div className="flex items-center justify-between pt-1">
+        <div className="flex items-center justify-between">
           <div className="flex items-baseline gap-2">
             <span className="font-display text-xl font-bold text-card-foreground">
               ${book.price}
             </span>
             {book.originalPrice && (
-              <span className="text-sm text-muted-foreground line-through font-body">
+              <span className="font-body text-sm text-muted-foreground line-through">
                 ${book.originalPrice}
               </span>
             )}
           </div>
-          <Button
-            size="icon"
-            variant="outline"
-            className="h-8 w-8 rounded-full"
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddToCart(book);
-            }}
-          >
-            <ShoppingCart className="h-3.5 w-3.5" />
-          </Button>
+
+          {onAddToCart && (
+            <Button
+              size="sm"
+              className="font-body text-xs gap-1"
+              onClick={() => onAddToCart(book)}
+            >
+              <ShoppingCart className="h-3.5 w-3.5" />
+              {t("actions.addToCart")}
+            </Button>
+          )}
         </div>
       </div>
     </div>
