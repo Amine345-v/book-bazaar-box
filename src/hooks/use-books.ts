@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
+import { toast } from "sonner";
 import type { Book, I18nField } from "@/types/book";
 
 // Static cover image imports
