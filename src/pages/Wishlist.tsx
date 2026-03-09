@@ -1,9 +1,9 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BookCard from "@/components/BookCard";
-import { useWishlist } from "@/contexts/WishlistContext";
-import { useCart } from "@/contexts/CartContext";
-import { useAuth } from "@/contexts/AuthContext";
+import { useWishlist } from "@/stores/wishlist-store";
+import { useCart } from "@/stores/cart-store";
+import { useAuth } from "@/stores/auth-store";
 import { useBooks } from "@/hooks/use-books";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";

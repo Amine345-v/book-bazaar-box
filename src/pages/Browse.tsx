@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import CategoryFilter from "@/components/CategoryFilter";
 import BookCard from "@/components/BookCard";
 import { useBooks } from "@/hooks/use-books";
-import { useCart } from "@/contexts/CartContext";
+import { useCart } from "@/stores/cart-store";
 import { Button } from "@/components/ui/button";
 import {
   Select,

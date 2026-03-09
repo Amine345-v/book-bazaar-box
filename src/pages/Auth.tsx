@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/stores/auth-store";
 import { lovable } from "@/integrations/lovable/index";
 import logo from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";

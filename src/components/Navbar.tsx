@@ -14,8 +14,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useCart } from "@/contexts/CartContext";
-import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/stores/cart-store";
+import { useAuth } from "@/stores/auth-store";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 

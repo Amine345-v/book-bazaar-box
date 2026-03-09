@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "@/contexts/CartContext";
+import { useCart } from "@/stores/cart-store";
 import { useEffect } from "react";
 
 const PaymentSuccess = () => {

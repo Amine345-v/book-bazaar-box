@@ -1,7 +1,7 @@
 import { Star, ShoppingCart, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { useWishlist } from "@/contexts/WishlistContext";
+import { useWishlist } from "@/stores/wishlist-store";
 import { useTranslation } from "react-i18next";
 import type { Book } from "@/types/book";
 

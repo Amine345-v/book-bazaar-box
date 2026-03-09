@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/stores/auth-store";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
 import { useBooks } from "@/hooks/use-books";

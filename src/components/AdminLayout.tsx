@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Navigate, Outlet, Link, useLocation } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/stores/auth-store";
 import { useIsAdmin } from "@/hooks/use-admin";
 import { LayoutDashboard, BookOpen, ShoppingBag, Users, ArrowLeft, Shield, Menu, X } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";

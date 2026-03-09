@@ -1,5 +1,5 @@
 import BookCard from "@/components/BookCard";
-import { useCart } from "@/contexts/CartContext";
+import { useCart } from "@/stores/cart-store";
 import type { Book } from "@/types/book";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
