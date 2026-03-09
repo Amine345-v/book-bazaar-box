@@ -7,8 +7,8 @@ import Footer from "@/components/Footer";
 import BookSection from "@/components/BookSection";
 import ReviewsSection from "@/components/ReviewsSection";
 import { useBook } from "@/hooks/use-books";
-import { useCart } from "@/contexts/CartContext";
-import { useWishlist } from "@/contexts/WishlistContext";
+import { useCart } from "@/stores/cart-store";
+import { useWishlist } from "@/stores/wishlist-store";
 
 const BookDetail = () => {
   const { id } = useParams();
