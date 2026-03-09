@@ -1,22 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 import { useAuth } from "@/stores/auth-store";
+import { useReviews, useCreateReview, useUpdateReview, useDeleteReview, type Review } from "@/hooks/use-reviews";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Star, MessageSquare, Pencil, Trash2 } from "lucide-react";
-import { toast } from "sonner";
-
-type Review = {
-  id: string;
-  user_id: string;
-  book_id: string;
-  rating: number;
-  title: string;
-  content: string | null;
-  created_at: string;
-  display_name: string | null;
-};
 
 interface ReviewsSectionProps {
   bookId: string;
@@ -58,60 +46,17 @@ const StarRating = ({
 
 const ReviewsSection = ({ bookId }: ReviewsSectionProps) => {
   const { user } = useAuth();
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: reviews = [], isLoading } = useReviews(bookId);
+  const createReview = useCreateReview(bookId);
+  const updateReview = useUpdateReview(bookId);
+  const deleteReview = useDeleteReview(bookId);
+
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [rating, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-
-  const fetchReviews = useCallback(async () => {
-    const { data: reviewsData } = await supabase
-      .from("reviews")
-      .select("id, user_id, book_id, rating, title, content, created_at")
-      .eq("book_id", bookId)
-      .order("created_at", { ascending: false });
-
-    if (reviewsData && reviewsData.length > 0) {
-      const userIds = [...new Set(reviewsData.map((r) => r.user_id))];
-      const { data: profilesData } = await supabase
-        .from("profiles")
-        .select("user_id, display_name")
-        .in("user_id", userIds);
-
-      const profileMap = new Map(
-        (profilesData || []).map((p) => [p.user_id, p.display_name])
-      );
-
-      setReviews(
-        reviewsData.map((r) => ({
-          id: r.id,
-          user_id: r.user_id,
-          book_id: r.book_id,
-          rating: r.rating,
-          title: r.title,
-          content: r.content,
-          created_at: r.created_at,
-          display_name: profileMap.get(r.user_id) || null,
-        }))
-      );
-    } else {
-      setReviews([]);
-    }
-    setLoading(false);
-  }, [bookId]);
-
-  useEffect(() => {
-    fetchReviews();
-    const channel = supabase
-      .channel(`reviews-${bookId}`)
-      .on("postgres_changes", { event: "*", schema: "public", table: "reviews", filter: `book_id=eq.${bookId}` }, () => fetchReviews())
-      .subscribe();
-    return () => { supabase.removeChannel(channel); };
-  }, [bookId, fetchReviews]);
 
   const userHasReviewed = reviews.some((r) => r.user_id === user?.id);
 
@@ -132,40 +77,29 @@ const ReviewsSection = ({ bookId }: ReviewsSectionProps) => {
     setShowForm(true);
   };
 
-  const handleDelete = async (reviewId: string) => {
+  const handleDelete = (reviewId: string) => {
     if (!confirm("Delete this review?")) return;
-    const { error } = await supabase.from("reviews").delete().eq("id", reviewId);
-    if (error) toast.error(error.message);
-    else toast.success("Review deleted");
+    deleteReview.mutate(reviewId);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) { toast.error("Please sign in to leave a review"); return; }
-    if (!title.trim()) { toast.error("Please add a title"); return; }
-    setSubmitting(true);
+    if (!user || !title.trim()) return;
+
+    const input = {
+      rating,
+      title: title.trim(),
+      content: content.trim() || null,
+    };
 
     if (editingId) {
-      const { error } = await supabase.from("reviews").update({
-        rating,
-        title: title.trim(),
-        content: content.trim() || null,
-      }).eq("id", editingId);
-      if (error) toast.error(error.message);
-      else { toast.success("Review updated!"); resetForm(); }
+      updateReview.mutate({ id: editingId, ...input }, { onSuccess: resetForm });
     } else {
-      const { error } = await supabase.from("reviews").insert({
-        user_id: user.id,
-        book_id: bookId,
-        rating,
-        title: title.trim(),
-        content: content.trim() || null,
-      });
-      if (error) toast.error(error.message);
-      else { toast.success("Review submitted!"); resetForm(); }
+      createReview.mutate(input, { onSuccess: resetForm });
     }
-    setSubmitting(false);
   };
+
+  const submitting = createReview.isPending || updateReview.isPending;
 
   const avgRating = reviews.length > 0
     ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
@@ -221,7 +155,7 @@ const ReviewsSection = ({ bookId }: ReviewsSectionProps) => {
         </form>
       )}
 
-      {loading ? (
+      {isLoading ? (
         <p className="font-body text-muted-foreground">Loading reviews...</p>
       ) : reviews.length === 0 ? (
         <div className="text-center py-10 bg-card rounded-xl border border-border">

@@ -8,13 +8,13 @@ import BookSection from "@/components/BookSection";
 import ReviewsSection from "@/components/ReviewsSection";
 import { useBook } from "@/hooks/use-books";
 import { useCart } from "@/stores/cart-store";
-import { useWishlist } from "@/stores/wishlist-store";
+import { useToggleWishlist } from "@/hooks/use-wishlist";
 
 const BookDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
-  const { isInWishlist, toggleWishlist } = useWishlist();
+  const { isInWishlist, toggleWishlist } = useToggleWishlist();
   const { book, books = [], isLoading } = useBook(id);
 
   if (isLoading) {

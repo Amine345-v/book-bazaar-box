@@ -1,7 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
+import { toast } from "sonner";
 import type { Book, I18nField } from "@/types/book";
 
 // Static cover image imports
@@ -100,4 +101,82 @@ export function useBook(id: string | undefined) {
   const { data: books, ...rest } = useBooks();
   const book = books?.find((b) => b.id === id);
   return { book, books, ...rest };
+}
+
+type BookInput = {
+  id: string;
+  title: string;
+  author: string;
+  price: number;
+  original_price?: number | null;
+  category: string;
+  cover_key: string;
+  description: string;
+  pages: number;
+  language: string;
+  format: string;
+  featured: boolean;
+  bestseller: boolean;
+  new_arrival: boolean;
+};
+
+export function useCreateBook() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: BookInput) => {
+      const { error } = await supabase.from("books").insert(input);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Book created");
+      qc.invalidateQueries({ queryKey: ["books"] });
+    },
+    onError: (e) => toast.error(e.message),
+  });
+}
+
+export function useUpdateBook() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, ...input }: BookInput) => {
+      const { error } = await supabase.from("books").update(input).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Book updated");
+      qc.invalidateQueries({ queryKey: ["books"] });
+    },
+    onError: (e) => toast.error(e.message),
+  });
+}
+
+export function useDeleteBook() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("books").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Book deleted");
+      qc.invalidateQueries({ queryKey: ["books"] });
+    },
+    onError: (e) => toast.error(e.message),
+  });
+}
+
+export function useTranslateBooks() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      const { data, error } = await supabase.functions.invoke("translate-books");
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      toast.success(data?.message || "Translation complete");
+      qc.invalidateQueries({ queryKey: ["books"] });
+    },
+    onError: (e) => toast.error(e.message || "Translation failed"),
+  });
 }

@@ -1,44 +1,17 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/stores/auth-store";
-import { supabase } from "@/integrations/supabase/client";
-import { useEffect, useState } from "react";
+import { usePurchases } from "@/hooks/use-purchases";
 import { useBooks } from "@/hooks/use-books";
 import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
-type Purchase = {
-  id: string;
-  book_id: string;
-  amount: number;
-  status: string;
-  created_at: string;
-};
-
 const Purchases = () => {
   const { user } = useAuth();
-  const [purchases, setPurchases] = useState<Purchase[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: purchases = [], isLoading } = usePurchases();
   const navigate = useNavigate();
   const { data: books = [] } = useBooks();
-
-  useEffect(() => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
-    const fetchPurchases = async () => {
-      const { data } = await supabase
-        .from("purchases")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-      if (data) setPurchases(data);
-      setLoading(false);
-    };
-    fetchPurchases();
-  }, [user]);
 
   if (!user) {
     return (
@@ -60,7 +33,7 @@ const Purchases = () => {
       <main className="container mx-auto px-4 py-10">
         <h1 className="font-display text-4xl font-bold text-foreground mb-8">My Purchases</h1>
 
-        {loading ? (
+        {isLoading ? (
           <p className="font-body text-muted-foreground">Loading...</p>
         ) : purchases.length === 0 ? (
           <div className="text-center py-20">
