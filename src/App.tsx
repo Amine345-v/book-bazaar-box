@@ -18,6 +18,8 @@ import Wishlist from "./pages/Wishlist";
 import Purchases from "./pages/Purchases";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import Profile from "./pages/Profile";
+import Library from "./pages/Library";
+import Reader from "./pages/Reader";
 import NotFound from "./pages/NotFound";
 import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
