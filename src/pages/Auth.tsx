@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/stores/auth-store";
-import { lovable } from "@/integrations/lovable/index";
+import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { BookOpen, Mail, Lock, User, Check, X } from "lucide-react";
+import { Mail, Lock, User, Check, X } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 
@@ -22,7 +22,6 @@ const getPasswordStrength = (pw: string) => {
 };
 
 const strengthLabels = ["Very Weak", "Weak", "Fair", "Strong", "Very Strong"];
-const strengthColors = ["bg-destructive", "bg-orange-500", "bg-yellow-500", "bg-emerald-500", "bg-emerald-600"];
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -70,12 +69,14 @@ const Auth = () => {
   };
 
   const handleOAuth = async (provider: "google" | "apple") => {
-    const callbackUrl = `${window.location.origin}/auth`;
-    const { error } = await lovable.auth.signInWithOAuth(provider, {
-      redirect_uri: callbackUrl,
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/auth`,
+      },
     });
     if (error) {
-      toast.error(error.message || "OAuth sign-in failed");
+      toast.error(error.message || `${provider} sign-in failed`);
     }
   };
 
@@ -229,3 +230,5 @@ const Auth = () => {
 };
 
 export default Auth;
+
+                  
