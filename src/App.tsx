@@ -47,6 +47,7 @@ const App = () => (
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/auth/callback" element={<Auth />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/purchases" element={<Purchases />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />

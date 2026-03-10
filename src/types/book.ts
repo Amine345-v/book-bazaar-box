@@ -18,6 +18,7 @@ export type Book = {
   language: string;
   format: string;
   publishDate: string;
+  epubKey?: string;
   // i18n fields
   titleI18n?: I18nField;
   descriptionI18n?: I18nField;

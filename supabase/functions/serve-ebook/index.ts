@@ -40,7 +40,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { bookId } = await req.json();
+    const { bookId, preview } = await req.json();
     if (!bookId) {
       return new Response(JSON.stringify({ error: "bookId required" }), {
         status: 400,
@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
       .eq("status", "completed")
       .maybeSingle();
 
-    if (!purchase) {
+    if (!purchase && !preview) {
       return new Response(
         JSON.stringify({ error: "Book not purchased" }),
         {
@@ -108,6 +108,7 @@ Deno.serve(async (req) => {
         ...corsHeaders,
         "Content-Type": "application/epub+zip",
         "X-Watermark": `uid:${user.id}:${Date.now()}`,
+        "X-Preview": preview ? "true" : "false",
         "Cache-Control": "no-store, no-cache",
       },
     });

@@ -42,7 +42,32 @@ async function fetchBooks(): Promise<Book[]> {
 
   if (error) throw error;
 
-  return (data || []).map((row) => ({
+  type RawBookRow = {
+    id: string;
+    title: string;
+    author: string;
+    price: number;
+    original_price: number | null;
+    cover_key: string;
+    category: string;
+    rating: number;
+    reviews_count: number;
+    description: string;
+    featured: boolean;
+    bestseller: boolean;
+    new_arrival: boolean;
+    pages: number;
+    language: string;
+    format: string;
+    publish_date: string;
+    epub_key?: string | null;
+    title_i18n?: I18nField;
+    description_i18n?: I18nField;
+    category_i18n?: I18nField;
+    format_i18n?: I18nField;
+  };
+
+  return (data || []).map((row: RawBookRow) => ({
     id: row.id,
     title: row.title,
     author: row.author,
@@ -60,11 +85,12 @@ async function fetchBooks(): Promise<Book[]> {
     language: row.language,
     format: row.format,
     publishDate: row.publish_date,
-    titleI18n: (row as any).title_i18n as I18nField | undefined,
-    descriptionI18n: (row as any).description_i18n as I18nField | undefined,
-    categoryI18n: (row as any).category_i18n as I18nField | undefined,
-    formatI18n: (row as any).format_i18n as I18nField | undefined,
-  }));
+    epubKey: row.epub_key || undefined,
+    titleI18n: row.title_i18n,
+    descriptionI18n: row.description_i18n,
+    categoryI18n: row.category_i18n,
+    formatI18n: row.format_i18n,
+  }))
 }
 
 /** Resolve an i18n field for the current language, falling back to English then the raw value */
@@ -115,6 +141,7 @@ type BookInput = {
   pages: number;
   language: string;
   format: string;
+  epub_key?: string | null;
   featured: boolean;
   bestseller: boolean;
   new_arrival: boolean;

@@ -192,14 +192,58 @@ export function useDeleteHighlight() {
   });
 }
 
-// ── Fetch EPUB binary via edge function ──
-export function useEpubData(bookId: string | undefined) {
+// ── Reading sessions and stats ──
+export function useReadingSessions() {
   const { user } = useAuth();
   return useQuery({
-    queryKey: ["epub-data", bookId],
+    queryKey: ["reading-sessions", user?.id],
+    queryFn: async () => {
+      if (!user) return [] as Array<{ id: string; user_id: string; book_id: string; duration_seconds: number; started_at: string }>; 
+      const { data, error } = await supabase
+        .from("reading_sessions")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("started_at", { ascending: false });
+      if (error) throw error;
+      return (data || []) as Array<{ id: string; user_id: string; book_id: string; duration_seconds: number; started_at: string }>;
+    },
+    enabled: !!user,
+    staleTime: 2 * 60 * 1000,
+  });
+}
+
+export function useAddReadingSession() {
+  const qc = useQueryClient();
+  const { user } = useAuth();
+  return useMutation({
+    mutationFn: async ({ bookId, durationSeconds }: { bookId: string; durationSeconds: number }) => {
+      if (!user || durationSeconds <= 0) return;
+      const { error } = await supabase.from("reading_sessions").insert({
+        user_id: user.id,
+        book_id: bookId,
+        duration_seconds: durationSeconds,
+        started_at: new Date().toISOString(),
+        ended_at: new Date().toISOString(),
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["reading-sessions", user?.id] });
+    },
+    onError: (e) => {
+      console.error(e);
+    },
+  });
+}
+
+// ── Fetch EPUB binary via edge function ──
+export function useEpubData(bookId: string | undefined, preview = false) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["epub-data", bookId, preview],
     queryFn: async () => {
       const { data, error } = await supabase.functions.invoke("serve-ebook", {
-        body: { bookId },
+        body: { bookId, preview },
       });
       if (error) throw error;
       // data is already an ArrayBuffer or Blob

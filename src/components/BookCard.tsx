@@ -91,7 +91,10 @@ const BookCard = ({ book, onAddToCart }: BookCardProps) => {
             <Button
               size="sm"
               className="font-body text-xs gap-1"
-              onClick={() => onAddToCart(book)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddToCart(book);
+              }}
             >
               <ShoppingCart className="h-3.5 w-3.5" />
               {t("actions.addToCart")}

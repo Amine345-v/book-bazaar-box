@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/stores/auth-store";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,15 +22,61 @@ const Profile = () => {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
 
+  const { data: readingProgress = [] } = useQuery<
+    Array<{ book_id: string; percentage: number; last_read_at: string }>
+  >({
+    queryKey: ["reading-progress", user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase
+        .from("reading_progress")
+        .select("book_id, percentage, last_read_at")
+        .eq("user_id", user.id);
+      if (error) throw error;
+      return (data || []) as Array<{ book_id: string; percentage: number; last_read_at: string }>;
+    },
+    enabled: !!user,
+  });
+
+  const { data: readingSessions = [] } = useQuery<
+    Array<{ duration_seconds: number; started_at: string }>
+  >({
+    queryKey: ["reading-sessions", user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase
+        .from("reading_sessions")
+        .select("duration_seconds, started_at")
+        .eq("user_id", user.id)
+        .order("started_at", { ascending: false });
+      if (error) throw error;
+      return (data || []) as Array<{ duration_seconds: number; started_at: string }>;
+    },
+    enabled: !!user,
+  });
+
+  const fetchProfileCallback = useCallback(async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from("profiles")
+      .select("display_name, avatar_url")
+      .eq("user_id", user!.id)
+      .single();
+    if (data) {
+      setDisplayName(data.display_name || "");
+      setAvatarUrl(data.avatar_url);
+    }
+  }, [user]);
+
   useEffect(() => {
     if (!authLoading && !user) {
       navigate("/auth");
       return;
     }
     if (user) {
-      fetchProfile();
+      fetchProfileCallback();
     }
-  }, [user, authLoading]);
+  }, [user, authLoading, navigate, fetchProfileCallback]);
 
   const fetchProfile = async () => {
     const { data } = await supabase
@@ -110,6 +157,27 @@ const Profile = () => {
 
   const initials = (displayName || user?.email || "U").charAt(0).toUpperCase();
 
+  const totalReadingTimeMinutes = Math.round(
+    readingSessions.reduce((sum, session) => sum + Number(session.duration_seconds || 0), 0) / 60
+  );
+  const booksCompleted = readingProgress.filter((p) => Number(p.percentage || 0) >= 95).length;
+
+  const uniqueDays = Array.from(
+    new Set(readingSessions.map((s) => new Date(s.started_at).toISOString().slice(0, 10)))
+  );
+
+  let dailyReadingStreak = 0;
+  for (let i = 0; ; i++) {
+    const day = new Date();
+    day.setDate(day.getDate() - i);
+    const key = day.toISOString().slice(0, 10);
+    if (uniqueDays.includes(key)) {
+      dailyReadingStreak += 1;
+    } else {
+      break;
+    }
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -119,6 +187,22 @@ const Profile = () => {
         </h1>
 
         <div className="bg-card rounded-xl p-8 shadow-book border border-border space-y-6">
+          {/* Reading Stats */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+            <div className="bg-secondary rounded-lg p-4 text-center">
+              <h3 className="font-display text-xs text-muted-foreground uppercase tracking-wide">Total Reading Time</h3>
+              <p className="font-display text-2xl font-bold">{totalReadingTimeMinutes}m</p>
+            </div>
+            <div className="bg-secondary rounded-lg p-4 text-center">
+              <h3 className="font-display text-xs text-muted-foreground uppercase tracking-wide">Books Completed</h3>
+              <p className="font-display text-2xl font-bold">{booksCompleted}</p>
+            </div>
+            <div className="bg-secondary rounded-lg p-4 text-center">
+              <h3 className="font-display text-xs text-muted-foreground uppercase tracking-wide">Daily Streak</h3>
+              <p className="font-display text-2xl font-bold">{dailyReadingStreak}</p>
+            </div>
+          </div>
+
           {/* Avatar */}
           <div className="flex flex-col items-center gap-3">
             <div className="relative group">

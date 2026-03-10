@@ -70,8 +70,9 @@ const Auth = () => {
   };
 
   const handleOAuth = async (provider: "google" | "apple") => {
+    const callbackUrl = `${window.location.origin}/auth`;
     const { error } = await lovable.auth.signInWithOAuth(provider, {
-      redirect_uri: window.location.origin,
+      redirect_uri: callbackUrl,
     });
     if (error) {
       toast.error(error.message || "OAuth sign-in failed");

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useBooks, useCreateBook, useUpdateBook, useDeleteBook, useTranslateBooks } from "@/hooks/use-books";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,6 +25,7 @@ type BookFormData = {
   pages: string;
   language: string;
   format: string;
+  epub_key?: string;
   featured: boolean;
   bestseller: boolean;
   new_arrival: boolean;
@@ -41,6 +43,7 @@ const emptyForm: BookFormData = {
   pages: "0",
   language: "English",
   format: "EPUB, PDF",
+  epub_key: "",
   featured: false,
   bestseller: false,
   new_arrival: false,
@@ -57,6 +60,7 @@ const AdminBooks = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<BookFormData>(emptyForm);
+  const [uploadingEpub, setUploadingEpub] = useState(false);
 
   const filteredBooks = books.filter(
     (b) =>
@@ -84,11 +88,43 @@ const AdminBooks = () => {
       pages: String(book.pages),
       language: book.language,
       format: book.format,
+      epub_key: book.epubKey || "",
       featured: !!book.featured,
       bestseller: !!book.bestseller,
       new_arrival: !!book.newArrival,
     });
     setDialogOpen(true);
+  };
+
+  const handleEpubUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !form.id) return;
+    if (!file.name.toLowerCase().endsWith(".epub")) {
+      alert("Please upload an EPUB file");
+      return;
+    }
+    setUploadingEpub(true);
+    try {
+      const { data: uploadResult, error: uploadError } = await supabase.storage
+        .from("ebooks")
+        .upload(`${form.id}/${file.name}`, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { error: bookError } = await supabase
+        .from("books")
+        .update({ epub_key: file.name })
+        .eq("id", form.id);
+
+      if (bookError) throw bookError;
+
+      setForm((prev) => ({ ...prev, epub_key: file.name }));
+      alert("EPUB uploaded and registered successfully.");
+    } catch (err) {
+      alert((err as Error).message || "Upload failed");
+    } finally {
+      setUploadingEpub(false);
+    }
   };
 
   const handleSave = () => {
@@ -106,6 +142,7 @@ const AdminBooks = () => {
       pages: Number(form.pages),
       language: form.language,
       format: form.format,
+      epub_key: form.epub_key || null,
       featured: form.featured,
       bestseller: form.bestseller,
       new_arrival: form.new_arrival,
@@ -254,6 +291,19 @@ const AdminBooks = () => {
                 <Label className="font-body text-sm">Format</Label>
                 <Input value={form.format} onChange={(e) => updateForm("format", e.target.value)} className="font-body mt-1" />
               </div>
+            </div>
+            <div className="mb-4">
+              <Label className="font-body text-sm">EPUB Upload (admin feature)</Label>
+              <input
+                type="file"
+                accept=".epub"
+                className="mt-1"
+                onChange={handleEpubUpload}
+                disabled={uploadingEpub}
+              />
+              {form.epub_key && (
+                <p className="text-xs text-muted-foreground mt-1">Uploaded file: {form.epub_key}</p>
+              )}
             </div>
             <div className="flex gap-6">
               <div className="flex items-center gap-2">

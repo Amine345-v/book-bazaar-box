@@ -104,9 +104,14 @@ const BookDetail = () => {
                   <BookOpen className="h-4 w-4" /> Read Now
                 </Button>
               ) : (
-                <Button size="lg" className="font-body font-semibold gap-2" onClick={() => addToCart(book)}>
-                  <ShoppingCart className="h-4 w-4" /> Add to Cart
-                </Button>
+                <>
+                  <Button size="lg" className="font-body font-semibold gap-2" onClick={() => addToCart(book)}>
+                    <ShoppingCart className="h-4 w-4" /> Add to Cart
+                  </Button>
+                  <Button size="lg" variant="outline" className="font-body font-semibold gap-2" onClick={() => navigate(`/read/${book.id}?preview=1`)}>
+                    <BookOpen className="h-4 w-4" /> Preview First Chapter
+                  </Button>
+                </>
               )}
               <Button
                 size="lg"

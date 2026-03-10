@@ -35,12 +35,14 @@ import {
   useAddHighlight,
   useDeleteHighlight,
   useReadingProgress,
+  useAddReadingSession,
 } from "@/hooks/use-reader";
 
 interface EpubReaderProps {
   bookId: string;
   epubData: ArrayBuffer;
   onClose: () => void;
+  preview?: boolean;
 }
 
 const FONT_SIZES = [14, 16, 18, 20, 22, 24];
@@ -57,11 +59,17 @@ const EpubReader = ({ bookId, epubData, onClose }: EpubReaderProps) => {
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [isDark, setIsDark] = useState(false);
+  const [isPreviewStopped, setIsPreviewStopped] = useState(false);
+  const [previewLimitPct, setPreviewLimitPct] = useState(15); // first 15% for preview
+  const sessionStartRef = useRef<number>(Date.now());
+  const { mutate: addReadingSession } = useAddReadingSession();
   const [fontSize, setFontSize] = useState(18);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<Array<{ cfi: string; href: string; excerpt: string }>>([]);
   const [showSearch, setShowSearch] = useState(false);
   const [selectedText, setSelectedText] = useState("");
+  const previewMode = preview || false;
+
   const [selectedCfiRange, setSelectedCfiRange] = useState("");
   const [showHighlightMenu, setShowHighlightMenu] = useState(false);
 
@@ -78,6 +86,7 @@ const EpubReader = ({ bookId, epubData, onClose }: EpubReaderProps) => {
   useEffect(() => {
     if (!viewerRef.current || !epubData) return;
 
+    const initialSessionStart = Date.now();
     const book = ePub(epubData);
     bookRef.current = book;
 
@@ -118,12 +127,22 @@ const EpubReader = ({ bookId, epubData, onClose }: EpubReaderProps) => {
     rendition.display(startCfi || undefined);
 
     // Track location changes
-    rendition.on("locationChanged", (location: any) => {
-      const cfi = location.start?.cfi || location.start;
+    rendition.on("locationChanged", (location: { start?: { cfi?: string } | string }) => {
+      const cfi = typeof location.start === "string" ? location.start : location.start?.cfi;
       if (cfi) setCurrentCfi(cfi);
 
       if (book.locations.length()) {
         const pct = book.locations.percentageFromCfi(cfi);
+        if (previewMode && pct > previewLimitPct / 100) {
+          setIsPreviewStopped(true);
+          const allowedCfi = book.locations.cfiFromPercentage(previewLimitPct / 100);
+          rendition.display(allowedCfi);
+          setPercentage(Math.round(previewLimitPct));
+          return;
+        }
+
+        if (previewMode) setIsPreviewStopped(false);
+
         setPercentage(Math.round(pct * 100));
       }
     });
@@ -136,7 +155,7 @@ const EpubReader = ({ bookId, epubData, onClose }: EpubReaderProps) => {
     });
 
     // Text selection for highlighting
-    rendition.on("selected", (cfiRange: string, contents: any) => {
+    rendition.on("selected", (cfiRange: string, contents: unknown) => {
       const text = rendition.getRange(cfiRange)?.toString() || "";
       if (text.trim()) {
         setSelectedText(text);
@@ -156,10 +175,15 @@ const EpubReader = ({ bookId, epubData, onClose }: EpubReaderProps) => {
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
+
+      const durationSeconds = Math.max(0, Math.round((Date.now() - initialSessionStart) / 1000));
+      if (durationSeconds > 2) {
+        addReadingSession({ bookId, durationSeconds });
+      }
+
       book.destroy();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [epubData]);
+  }, [epubData, addReadingSession, bookId, onClose, previewMode, fontSize, isDark, savedProgress, previewLimitPct]);
 
   // Apply highlights from DB
   useEffect(() => {
@@ -203,12 +227,20 @@ const EpubReader = ({ bookId, epubData, onClose }: EpubReaderProps) => {
     return () => clearTimeout(timer);
   }, [currentCfi, percentage, bookId, saveProgress]);
 
-  const goNext = useCallback(() => renditionRef.current?.next(), []);
-  const goPrev = useCallback(() => renditionRef.current?.prev(), []);
+  const goNext = useCallback(() => {
+    if (previewMode && isPreviewStopped) return;
+    renditionRef.current?.next();
+  }, [isPreviewStopped, previewMode]);
+
+  const goPrev = useCallback(() => {
+    if (previewMode && isPreviewStopped) return;
+    renditionRef.current?.prev();
+  }, [isPreviewStopped, previewMode]);
 
   const goToLocation = useCallback((href: string) => {
+    if (previewMode && isPreviewStopped) return;
     renditionRef.current?.display(href);
-  }, []);
+  }, [previewMode, isPreviewStopped]);
 
   const handleAddBookmark = useCallback(() => {
     if (!currentCfi) return;
@@ -240,9 +272,15 @@ const EpubReader = ({ bookId, epubData, onClose }: EpubReaderProps) => {
   const handleSearch = useCallback(async () => {
     if (!bookRef.current || !searchQuery.trim()) return;
     const book = bookRef.current;
-    const results: any[] = [];
+    const results: Array<{ cfi: string; href: string; excerpt: string }> = [];
 
-    const spine = book.spine as any;
+    type SpineItem = {
+      load: (loadFn: (href: string) => Promise<unknown>) => Promise<{ documentElement: { textContent: string } }>;
+      cfiFromElement?: (element: Element) => string;
+      href: string;
+    };
+
+    const spine = book.spine as { items?: SpineItem[]; spineItems?: SpineItem[] };
     for (const item of spine.items || spine.spineItems || []) {
       try {
         const doc = await item.load(book.load.bind(book));
@@ -284,6 +322,7 @@ const EpubReader = ({ bookId, epubData, onClose }: EpubReaderProps) => {
           <BookOpen className="h-5 w-5 text-primary" />
           <span className={`font-body text-sm ${isDark ? "text-muted-foreground" : "text-foreground"}`}>
             {percentage}% · Reading
+            {previewMode && " (Preview)"}
           </span>
         </div>
 
@@ -416,6 +455,12 @@ const EpubReader = ({ bookId, epubData, onClose }: EpubReaderProps) => {
           </Sheet>
         </div>
       </div>
+
+      {previewMode && isPreviewStopped && (
+        <div className="px-4 py-2 bg-amber-100 text-amber-800 text-xs font-body">
+          You are in preview mode. Only the first chapter is available. Purchase for full access.
+        </div>
+      )}
 
       {/* Search bar */}
       {showSearch && (
