@@ -24,6 +24,7 @@ export type Database = {
           created_at: string
           description: string
           description_i18n: Json | null
+          epub_key: string | null
           featured: boolean
           format: string
           format_i18n: Json | null
@@ -49,6 +50,7 @@ export type Database = {
           created_at?: string
           description?: string
           description_i18n?: Json | null
+          epub_key?: string | null
           featured?: boolean
           format?: string
           format_i18n?: Json | null
@@ -74,6 +76,7 @@ export type Database = {
           created_at?: string
           description?: string
           description_i18n?: Json | null
+          epub_key?: string | null
           featured?: boolean
           format?: string
           format_i18n?: Json | null
@@ -145,6 +148,102 @@ export type Database = {
           id?: string
           status?: string
           stripe_payment_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reader_bookmarks: {
+        Row: {
+          book_id: string
+          cfi_position: string
+          created_at: string
+          id: string
+          label: string
+          user_id: string
+        }
+        Insert: {
+          book_id: string
+          cfi_position: string
+          created_at?: string
+          id?: string
+          label?: string
+          user_id: string
+        }
+        Update: {
+          book_id?: string
+          cfi_position?: string
+          created_at?: string
+          id?: string
+          label?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reader_highlights: {
+        Row: {
+          book_id: string
+          cfi_range: string
+          color: string
+          created_at: string
+          id: string
+          note: string | null
+          text: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          book_id: string
+          cfi_range: string
+          color?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          text?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          book_id?: string
+          cfi_range?: string
+          color?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          text?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reading_progress: {
+        Row: {
+          book_id: string
+          cfi_position: string | null
+          created_at: string
+          id: string
+          last_read_at: string
+          percentage: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          book_id: string
+          cfi_position?: string | null
+          created_at?: string
+          id?: string
+          last_read_at?: string
+          percentage?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          book_id?: string
+          cfi_position?: string | null
+          created_at?: string
+          id?: string
+          last_read_at?: string
+          percentage?: number
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
