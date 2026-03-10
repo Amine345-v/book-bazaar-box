@@ -97,7 +97,7 @@ const BookCard = ({ book, onAddToCart }: BookCardProps) => {
               }}
             >
               <ShoppingCart className="h-3.5 w-3.5" />
-              {t("actions.addToCart")}
+  
             </Button>
           )}
         </div>
