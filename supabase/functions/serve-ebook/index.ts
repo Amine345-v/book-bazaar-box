@@ -41,7 +41,8 @@ Deno.serve(async (req) => {
     }
 
     const { bookId, preview } = await req.json();
-    const isPreview = preview === true || preview === "1" || preview === "true";
+    const isPreview = preview === true || preview === "1" || preview === "true" || preview === 1 || preview === "1";
+    console.log("serve-ebook", { bookId, preview, isPreview, user: user.id });
     if (!bookId) {
       return new Response(JSON.stringify({ error: "bookId required" }), {
         status: 400,
