@@ -4,7 +4,7 @@ import { useEpubData } from "@/hooks/use-reader";
 import { useBook } from "@/hooks/use-books";
 import { usePurchases } from "@/hooks/use-purchases";
 import EpubReader from "@/components/EpubReader";
-import { Loader2, Lock } from "lucide-react";
+import { Loader as Loader2, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Reader = () => {
