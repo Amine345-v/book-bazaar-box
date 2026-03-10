@@ -51,6 +51,8 @@ const App = () => (
           <Route path="/purchases" element={<Purchases />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/library" element={<Library />} />
+          <Route path="/read/:id" element={<Reader />} />
           {/* Admin routes */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
