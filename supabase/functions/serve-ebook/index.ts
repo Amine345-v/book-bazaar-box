@@ -6,7 +6,16 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-Deno.serve(async (req) => {
+const serveFn = (typeof Deno !== "undefined" && typeof Deno.serve === "function")
+  ? Deno.serve
+  : undefined;
+
+if (!serveFn) {
+  console.warn("serve-ebook function: Deno.serve unavailable. This file is intended for Supabase Edge Functions in Deno.");
+}
+
+if (serveFn) {
+  serveFn(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -40,14 +49,15 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { bookId } = await req.json();
-    const previewHeader = req.headers.get("x-preview");
+    const { bookId, preview } = await req.json();
     const isPreview =
-      previewHeader === "1" ||
-      previewHeader === "true" ||
-      previewHeader === "True" ||
-      previewHeader === "TRUE";
-    console.log("serve-ebook", { bookId, previewHeader, isPreview, user: user.id });
+      preview === true ||
+      preview === "1" ||
+      preview === "true" ||
+      preview === 1 ||
+      preview === "True" ||
+      preview === "TRUE";
+    console.log("serve-ebook", { bookId, preview, isPreview, user: user.id });
     if (!bookId) {
       return new Response(JSON.stringify({ error: "bookId required" }), {
         status: 400,

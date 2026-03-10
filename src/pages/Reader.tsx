@@ -75,15 +75,18 @@ const Reader = () => {
   }
 
   if (error || !epubData) {
+    const isFunctionError = (error as Error)?.message?.includes("Failed to send a request to the Edge Function");
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center max-w-md px-4">
           <Lock className="h-16 w-16 text-destructive mx-auto mb-4" />
           <h1 className="font-display text-2xl font-bold text-foreground mb-2">Access Denied</h1>
           <p className="font-body text-muted-foreground mb-4">
-            {(error as Error)?.message || "Unable to load book data."}
+            {isFunctionError
+              ? "Preview is not available right now because the Edge Function could not be reached. Start the Supabase functions server with 'supabase functions serve'."
+              : (error as Error)?.message || "Unable to load book data."}
           </p>
-          <div className="flex gap-3 justify-center">
+          <div className="flex flex-col gap-3 justify-center">
             <Button onClick={() => navigate(`/book/${id}`)} className="font-body">
               View Book
             </Button>
