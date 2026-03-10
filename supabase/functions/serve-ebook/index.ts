@@ -40,9 +40,14 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { bookId, preview } = await req.json();
-    const isPreview = preview === true || preview === "1" || preview === "true" || preview === 1 || preview === "1";
-    console.log("serve-ebook", { bookId, preview, isPreview, user: user.id });
+    const { bookId } = await req.json();
+    const previewHeader = req.headers.get("x-preview");
+    const isPreview =
+      previewHeader === "1" ||
+      previewHeader === "true" ||
+      previewHeader === "True" ||
+      previewHeader === "TRUE";
+    console.log("serve-ebook", { bookId, previewHeader, isPreview, user: user.id });
     if (!bookId) {
       return new Response(JSON.stringify({ error: "bookId required" }), {
         status: 400,

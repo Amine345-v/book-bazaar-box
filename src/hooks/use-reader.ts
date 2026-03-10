@@ -243,7 +243,8 @@ export function useEpubData(bookId: string | undefined, preview = false) {
     queryKey: ["epub-data", bookId, preview],
     queryFn: async () => {
       const { data, error } = await supabase.functions.invoke("serve-ebook", {
-        body: { bookId, preview },
+        body: { bookId },
+        headers: { "x-preview": preview ? "1" : "0" },
       });
       if (error) throw error;
       // data is already an ArrayBuffer or Blob
@@ -256,3 +257,4 @@ export function useEpubData(bookId: string | undefined, preview = false) {
     retry: 1,
   });
 }
+

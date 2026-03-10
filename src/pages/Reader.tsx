@@ -15,9 +15,12 @@ const Reader = () => {
   const { data: purchases = [] } = usePurchases();
   const { book } = useBook(id);
 
-  const preview = new URLSearchParams(location.search).get("preview") === "1";
+  const previewParam = new URLSearchParams(location.search).get("preview");
+  const preview = previewParam === "1" || previewParam?.toLowerCase() === "true";
   const hasPurchased = user && book && purchases.some((p) => p.book_id === book.id && p.status === "completed");
   const canRead = hasPurchased || preview;
+
+  console.log("Reader preview", { id, previewParam, preview, hasPurchased, canRead });
 
   const { data: epubData, isLoading, error } = useEpubData(id, preview);
 
