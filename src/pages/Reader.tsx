@@ -24,7 +24,7 @@ const Reader = () => {
 
   const { data: epubData, isLoading, error } = useEpubData(id, preview);
 
-  if (!user) {
+  if (!user && !preview) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center max-w-md px-4">

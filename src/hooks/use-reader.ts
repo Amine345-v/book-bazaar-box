@@ -251,7 +251,7 @@ export function useEpubData(bookId: string | undefined, preview = false) {
       if (data instanceof Blob) return await data.arrayBuffer();
       throw new Error("Unexpected response format");
     },
-    enabled: !!user && !!bookId,
+    enabled: (!!user || preview) && !!bookId,
     staleTime: 30 * 60 * 1000,
     retry: 1,
   });

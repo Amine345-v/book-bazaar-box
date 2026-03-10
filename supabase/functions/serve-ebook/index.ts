@@ -21,33 +21,9 @@ if (serveFn) {
   }
 
   try {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabaseAnon = Deno.env.get("SUPABASE_ANON_KEY")!;
-
-    // Verify user with their token
-    const userClient = createClient(supabaseUrl, supabaseAnon, {
-      global: { headers: { Authorization: authHeader } },
-    });
-    const {
-      data: { user },
-      error: userError,
-    } = await userClient.auth.getUser();
-
-    if (userError || !user) {
-      return new Response(JSON.stringify({ error: "Invalid token" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
 
     const { bookId, preview } = await req.json();
     const isPreview =
@@ -57,7 +33,7 @@ if (serveFn) {
       preview === 1 ||
       preview === "True" ||
       preview === "TRUE";
-    console.log("serve-ebook", { bookId, preview, isPreview, user: user.id });
+
     if (!bookId) {
       return new Response(JSON.stringify({ error: "bookId required" }), {
         status: 400,
@@ -65,24 +41,59 @@ if (serveFn) {
       });
     }
 
-    // Check purchase with service role
-    const adminClient = createClient(supabaseUrl, supabaseServiceKey);
-    const { data: purchase } = await adminClient
-      .from("purchases")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("book_id", bookId)
-      .eq("status", "completed")
-      .maybeSingle();
+    let user = null;
 
-    if (!purchase && !isPreview) {
-      return new Response(
-        JSON.stringify({ error: "Book not purchased" }),
-        {
-          status: 403,
+    // Only verify authentication if not in preview mode
+    if (!isPreview) {
+      const authHeader = req.headers.get("Authorization");
+      if (!authHeader) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+        });
+      }
+
+      const userClient = createClient(supabaseUrl, supabaseAnon, {
+        global: { headers: { Authorization: authHeader } },
+      });
+      const {
+        data: { user: authUser },
+        error: userError,
+      } = await userClient.auth.getUser();
+
+      if (userError || !authUser) {
+        return new Response(JSON.stringify({ error: "Invalid token" }), {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      user = authUser;
+    }
+
+    console.log("serve-ebook", { bookId, preview, isPreview, userId: user?.id || "anonymous" });
+
+    // Check purchase with service role (only if not preview)
+    const adminClient = createClient(supabaseUrl, supabaseServiceKey);
+
+    if (!isPreview) {
+      const { data: purchase } = await adminClient
+        .from("purchases")
+        .select("id")
+        .eq("user_id", user!.id)
+        .eq("book_id", bookId)
+        .eq("status", "completed")
+        .maybeSingle();
+
+      if (!purchase) {
+        return new Response(
+          JSON.stringify({ error: "Book not purchased" }),
+          {
+            status: 403,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
     }
 
     // Get epub_key from books
@@ -124,7 +135,7 @@ if (serveFn) {
       headers: {
         ...corsHeaders,
         "Content-Type": "application/epub+zip",
-        "X-Watermark": `uid:${user.id}:${Date.now()}`,
+        "X-Watermark": user ? `uid:${user.id}:${Date.now()}` : `preview:${Date.now()}`,
         "X-Preview": preview ? "true" : "false",
         "Cache-Control": "no-store, no-cache",
       },
