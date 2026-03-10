@@ -41,6 +41,7 @@ Deno.serve(async (req) => {
     }
 
     const { bookId, preview } = await req.json();
+    const isPreview = preview === true || preview === "1" || preview === "true";
     if (!bookId) {
       return new Response(JSON.stringify({ error: "bookId required" }), {
         status: 400,
@@ -58,7 +59,7 @@ Deno.serve(async (req) => {
       .eq("status", "completed")
       .maybeSingle();
 
-    if (!purchase && !preview) {
+    if (!purchase && !isPreview) {
       return new Response(
         JSON.stringify({ error: "Book not purchased" }),
         {
