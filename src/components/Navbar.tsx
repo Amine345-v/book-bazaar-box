@@ -124,6 +124,9 @@ const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
                 <DropdownMenuItem onClick={() => navigate("/purchases")} className="font-body cursor-pointer">
                   <ShoppingCart className="h-4 w-4 mr-2" /> {t("nav.myPurchases")}
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/library")} className="font-body cursor-pointer">
+                  <BookOpen className="h-4 w-4 mr-2" /> My Library
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => signOut()}
