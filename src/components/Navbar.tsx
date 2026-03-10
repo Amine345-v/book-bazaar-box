@@ -1,4 +1,4 @@
-import { ShoppingCart, Menu, User, LogOut, Heart, UserCircle, Shield } from "lucide-react";
+import { ShoppingCart, Menu, User, LogOut, Heart, UserCircle, Shield, BookOpen } from "lucide-react";
 import logo from "@/assets/logo.png";
 import SearchAutocomplete from "@/components/SearchAutocomplete";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -123,6 +123,9 @@ const Navbar = ({ searchQuery = "", onSearchChange }: NavbarProps) => {
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate("/purchases")} className="font-body cursor-pointer">
                   <ShoppingCart className="h-4 w-4 mr-2" /> {t("nav.myPurchases")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/library")} className="font-body cursor-pointer">
+                  <BookOpen className="h-4 w-4 mr-2" /> My Library
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem

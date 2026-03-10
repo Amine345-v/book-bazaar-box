@@ -9,13 +9,21 @@ import ReviewsSection from "@/components/ReviewsSection";
 import { useBook } from "@/hooks/use-books";
 import { useCart } from "@/stores/cart-store";
 import { useToggleWishlist } from "@/hooks/use-wishlist";
+import { useAuth } from "@/stores/auth-store";
+import { usePurchases } from "@/hooks/use-purchases";
 
 const BookDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { isInWishlist, toggleWishlist } = useToggleWishlist();
+  const { user } = useAuth();
+  const { data: purchases = [] } = usePurchases();
   const { book, books = [], isLoading } = useBook(id);
+
+  const hasPurchased = user && book && purchases.some(
+    (p) => p.book_id === book.id && p.status === "completed"
+  );
 
   if (isLoading) {
     return (
@@ -90,10 +98,16 @@ const BookDetail = () => {
 
             <p className="font-body text-foreground/80 leading-relaxed mb-8 max-w-2xl">{book.description}</p>
 
-            <div className="flex gap-3 mb-8">
-              <Button size="lg" className="font-body font-semibold gap-2" onClick={() => addToCart(book)}>
-                <ShoppingCart className="h-4 w-4" /> Add to Cart
-              </Button>
+            <div className="flex flex-wrap gap-3 mb-8">
+              {hasPurchased ? (
+                <Button size="lg" className="font-body font-semibold gap-2" onClick={() => navigate(`/read/${book.id}`)}>
+                  <BookOpen className="h-4 w-4" /> Read Now
+                </Button>
+              ) : (
+                <Button size="lg" className="font-body font-semibold gap-2" onClick={() => addToCart(book)}>
+                  <ShoppingCart className="h-4 w-4" /> Add to Cart
+                </Button>
+              )}
               <Button
                 size="lg"
                 variant="outline"

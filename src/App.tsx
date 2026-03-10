@@ -18,6 +18,8 @@ import Wishlist from "./pages/Wishlist";
 import Purchases from "./pages/Purchases";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import Profile from "./pages/Profile";
+import Library from "./pages/Library";
+import Reader from "./pages/Reader";
 import NotFound from "./pages/NotFound";
 import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -49,6 +51,8 @@ const App = () => (
           <Route path="/purchases" element={<Purchases />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/library" element={<Library />} />
+          <Route path="/read/:id" element={<Reader />} />
           {/* Admin routes */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
