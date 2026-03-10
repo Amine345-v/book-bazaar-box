@@ -17,7 +17,13 @@ const BookDetail = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { isInWishlist, toggleWishlist } = useToggleWishlist();
+  const { user } = useAuth();
+  const { data: purchases = [] } = usePurchases();
   const { book, books = [], isLoading } = useBook(id);
+
+  const hasPurchased = user && book && purchases.some(
+    (p) => p.book_id === book.id && p.status === "completed"
+  );
 
   if (isLoading) {
     return (
