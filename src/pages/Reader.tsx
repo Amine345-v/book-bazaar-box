@@ -1,0 +1,75 @@
+import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "@/stores/auth-store";
+import { useEpubData } from "@/hooks/use-reader";
+import { useBook } from "@/hooks/use-books";
+import EpubReader from "@/components/EpubReader";
+import { Loader2, Lock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+const Reader = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { book } = useBook(id);
+  const { data: epubData, isLoading, error } = useEpubData(id);
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center max-w-md px-4">
+          <Lock className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+          <h1 className="font-display text-2xl font-bold text-foreground mb-2">Sign in Required</h1>
+          <p className="font-body text-muted-foreground mb-4">
+            You need to be signed in to read ebooks.
+          </p>
+          <Button onClick={() => navigate("/auth")} className="font-body">
+            Sign In
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 text-primary mx-auto mb-4 animate-spin" />
+          <p className="font-body text-muted-foreground">Loading your book...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !epubData) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center max-w-md px-4">
+          <Lock className="h-16 w-16 text-destructive mx-auto mb-4" />
+          <h1 className="font-display text-2xl font-bold text-foreground mb-2">Access Denied</h1>
+          <p className="font-body text-muted-foreground mb-4">
+            {(error as Error)?.message || "You haven't purchased this book yet."}
+          </p>
+          <div className="flex gap-3 justify-center">
+            <Button onClick={() => navigate(`/book/${id}`)} className="font-body">
+              View Book
+            </Button>
+            <Button variant="outline" onClick={() => navigate("/library")} className="font-body">
+              My Library
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <EpubReader
+      bookId={id!}
+      epubData={epubData}
+      onClose={() => navigate("/library")}
+    />
+  );
+};
+
+export default Reader;
