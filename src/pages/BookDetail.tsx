@@ -9,6 +9,8 @@ import ReviewsSection from "@/components/ReviewsSection";
 import { useBook } from "@/hooks/use-books";
 import { useCart } from "@/stores/cart-store";
 import { useToggleWishlist } from "@/hooks/use-wishlist";
+import { useAuth } from "@/stores/auth-store";
+import { usePurchases } from "@/hooks/use-purchases";
 
 const BookDetail = () => {
   const { id } = useParams();
