@@ -1,4 +1,4 @@
-import { ShoppingCart, Menu, User, LogOut, Heart, UserCircle, Shield } from "lucide-react";
+import { ShoppingCart, Menu, User, LogOut, Heart, UserCircle, Shield, BookOpen } from "lucide-react";
 import logo from "@/assets/logo.png";
 import SearchAutocomplete from "@/components/SearchAutocomplete";
 import ThemeToggle from "@/components/ThemeToggle";
