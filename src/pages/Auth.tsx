@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/stores/auth-store";
 import { supabase } from "@/integrations/supabase/client";
@@ -29,11 +29,34 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   const strength = getPasswordStrength(password);
+
+  // If already authenticated (including after OAuth redirect), go home
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  // Handle OAuth callback — exchange hash fragment for session
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash && hash.includes("access_token")) {
+      supabase.auth.getSession().then(({ data: { session }, error }) => {
+        if (error) {
+          toast.error(error.message);
+        } else if (session) {
+          // onAuthStateChange in the store will pick this up and set the user
+          // the useEffect above will then navigate to "/"
+          window.history.replaceState(null, "", window.location.pathname);
+        }
+      });
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,7 +95,7 @@ const Auth = () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}/`,
+        redirectTo: `${window.location.origin}/auth`,
       },
     });
     if (error) {
@@ -231,4 +254,5 @@ const Auth = () => {
 
 export default Auth;
 
-                  
+
+  
