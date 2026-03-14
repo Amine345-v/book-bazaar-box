@@ -8,12 +8,6 @@ import { Loader2 } from "lucide-react";
 const AuthCallback = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
-  const user = useAuthStore((s) => s.user);
-
-  // If auth store already has the user (exchange completed), navigate home
-  useEffect(() => {
-    if (user) navigate("/", { replace: true });
-  }, [user, navigate]);
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -31,12 +25,10 @@ const AuthCallback = () => {
 
     const code = url.searchParams.get("code");
     if (!code) {
-      // No code and no error — just go to auth
       navigate("/auth", { replace: true });
       return;
     }
 
-    // Exchange the PKCE code for a session (single call, no competition)
     supabase.auth.exchangeCodeForSession(window.location.href).then(({ data, error: exchangeError }) => {
       if (exchangeError) {
         const msg = exchangeError.message || "Sign-in failed. Please try again.";
@@ -47,9 +39,18 @@ const AuthCallback = () => {
       }
 
       if (data.session) {
-        // Session is established — onAuthStateChange in the store will pick it up
-        // and the useEffect above will navigate to "/"
+        // Directly push session into the auth store — don't wait for onAuthStateChange
+        useAuthStore.setState({
+          session: data.session,
+          user: data.session.user,
+          loading: false,
+        });
         window.history.replaceState(null, "", window.location.pathname);
+        navigate("/", { replace: true });
+      } else {
+        // Exchange returned no error and no session — unexpected
+        setError("Sign-in did not return a session. Please try again.");
+        setTimeout(() => navigate("/auth", { replace: true }), 2000);
       }
     });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
