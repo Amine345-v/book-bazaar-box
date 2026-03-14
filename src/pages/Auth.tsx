@@ -42,18 +42,38 @@ const Auth = () => {
     }
   }, [user, navigate]);
 
-  // Handle OAuth callback — exchange hash fragment for session
+  // Handle OAuth callback — covers both PKCE (?code=) and implicit (#access_token=) flows,
+  // as well as error responses from the provider.
   useEffect(() => {
+    const url = new URL(window.location.href);
+
+    // Provider returned an error (e.g. user cancelled, misconfigured app)
+    const oauthError = url.searchParams.get("error");
+    const oauthErrorDesc = url.searchParams.get("error_description");
+    if (oauthError) {
+      toast.error(oauthErrorDesc || oauthError);
+      window.history.replaceState(null, "", window.location.pathname);
+      return;
+    }
+
+    // PKCE flow: provider returns ?code= — the Supabase client exchanges it
+    // automatically via detectSessionInUrl + onAuthStateChange, but we clean
+    // the URL ourselves so the code doesn't sit in the address bar.
+    const code = url.searchParams.get("code");
+    if (code) {
+      supabase.auth.exchangeCodeForSession(window.location.href).then(({ error }) => {
+        if (error) toast.error(error.message);
+        window.history.replaceState(null, "", window.location.pathname);
+      });
+      return;
+    }
+
+    // Implicit flow (legacy): provider returns #access_token= in hash
     const hash = window.location.hash;
     if (hash && hash.includes("access_token")) {
       supabase.auth.getSession().then(({ data: { session }, error }) => {
-        if (error) {
-          toast.error(error.message);
-        } else if (session) {
-          // onAuthStateChange in the store will pick this up and set the user
-          // the useEffect above will then navigate to "/"
-          window.history.replaceState(null, "", window.location.pathname);
-        }
+        if (error) toast.error(error.message);
+        if (session) window.history.replaceState(null, "", window.location.pathname);
       });
     }
   }, []);
